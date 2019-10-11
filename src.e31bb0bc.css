@@ -1,0 +1,41 @@
+div {
+  box-sizing: border-box;
+}
+
+.join {
+  display: flex;
+  margin-top: 8px;
+}
+.join .right {
+  margin-left: 4px;
+}
+
+.row {
+  margin-top: -1px;
+  display: flex;
+  height: 32px;
+  border: 1px solid transparent;
+}
+.data .row {
+  border-color: #ddd;
+}
+.header .row {
+  font-weight: bold;
+}
+
+.cell {
+  height: 32px;
+  padding: 4px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  overflow: hidden;
+}
+
+.null {
+  font-family: Menlo, monospace;
+  font-size: 0.7rem;
+  color: #999;
+}
+
+/*# sourceMappingURL=/src.e31bb0bc.css.map */

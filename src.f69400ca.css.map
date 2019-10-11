@@ -1,0 +1,1 @@
+{"version":3,"sources":["styles.scss"],"names":[],"mappings":"AAQI;EACE;;;AAKN;EACE","file":"src.f69400ca.css","sourceRoot":"../src","sourcesContent":["$primary-color: white;\n$secondary-color: blue;\n\nbody {\n}\n\nheader {\n  nav {\n    a {\n      margin-right: 5px;\n    }\n  }\n}\n\n.row {\n  transition: transform 0.1s ease;\n}\n"]}
