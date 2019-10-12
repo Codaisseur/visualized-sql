@@ -1,35 +1,38 @@
 import React from "react";
 import { hot } from "react-hot-loader";
-import "./styles.scss";
-
+import { QueryParamProvider } from "use-query-params";
 import { HashRouter as Router, Switch, Route, NavLink } from "react-router-dom";
 
+import "./styles.scss";
+
 import Tutorial from "./Tutorial";
-import SqlStepper from "./SqlStepper";
+import CheatSheet from "./CheatSheet";
 
 function App() {
   return (
     <Router>
-      <nav>
-        <ul>
-          <li>
-            <NavLink exact to="/">
-              Animated tutorial (sketch)
-            </NavLink>
-          </li>
-          <li>
-            <NavLink exact to="/stepper">
-              Stepper (WIP)
-            </NavLink>
-          </li>
-        </ul>
-      </nav>
-      <div className="container">
-        <Switch>
-          <Route path="/stepper" component={SqlStepper} />
-          <Route component={Tutorial} />
-        </Switch>
-      </div>
+      <QueryParamProvider ReactRouterRoute={Route}>
+        <nav>
+          <ul>
+            <li>
+              <NavLink exact to="/">
+                Animated tutorial of example query
+              </NavLink>
+            </li>
+            <li>
+              <NavLink exact to="/cheatsheet">
+                Reference cheat sheet
+              </NavLink>
+            </li>
+          </ul>
+        </nav>
+        <div className="container">
+          <Switch>
+            <Route path="/cheatsheet" component={CheatSheet} />
+            <Route component={Tutorial} />
+          </Switch>
+        </div>
+      </QueryParamProvider>
     </Router>
   );
 }

@@ -1,6 +1,6 @@
 {
   "name": "sql",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "license": "MIT",
   "devDependencies": {
@@ -9,12 +9,15 @@
   },
   "dependencies": {
     "@hot-loader/react-dom": "^16.10.2",
+    "classnames": "^2.2.6",
     "gh-pages": "^2.1.1",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-hot-loader": "^4.12.15",
     "react-router-dom": "^5.1.2",
-    "react-transition-group": "^4.3.0"
+    "react-transition-group": "^4.3.0",
+    "use-query-params": "^0.4.1",
+    "use-react-router": "^1.0.7"
   },
   "alias": {
     "react-dom": "@hot-loader/react-dom"

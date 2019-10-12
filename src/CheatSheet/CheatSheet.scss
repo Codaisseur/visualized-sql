@@ -1,0 +1,67 @@
+@import "../config";
+
+.query {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+
+  .box {
+    border: 1px solid #555;
+    margin: 0 -8px;
+    padding: 8px;
+  }
+
+  .mb-1 {
+    margin-bottom: 8px;
+  }
+
+  .mb-2 {
+    margin-bottom: 12px;
+  }
+
+  .line {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .clause {
+    font-family: Menlo, monospace;
+    font-size: 28px;
+    line-height: 32px;
+    font-weight: bold;
+  }
+
+  // .clause::after {
+  //   content: "\00a0";
+  // }
+
+  // .var ~ .clause::before {
+  //   content: "\00a0";
+  // }
+
+  .var {
+    display: inline-block;
+
+    font-family: serif;
+    font-style: italic;
+    font-size: 16px;
+    padding: 4px 8px 5px;
+
+    border-radius: 6px;
+
+    border: 1.6px dashed #333;
+  }
+
+  .info {
+    font-size: 12px;
+    line-height: 14px;
+  }
+
+  .clause,
+  .var {
+    margin-right: 16px;
+  }
+}
