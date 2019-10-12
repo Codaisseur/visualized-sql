@@ -3,21 +3,42 @@ html {
   line-height: 20px;
 }
 
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
 div {
   box-sizing: border-box;
 }
 
-.container {
-  max-width: 1200px;
+nav ul {
+  margin: 0 16px;
+  padding: 0;
+  display: flex;
+}
+nav li {
+  display: block;
+}
+nav a {
+  display: block;
+  padding: 4px 8px;
+  outline: none;
+  text-decoration: none;
+  color: black;
+}
+nav a:hover {
+  background: #eee;
+}
+nav a.active {
+  background: #333;
+  color: white;
 }
 
-pre.sql {
-  margin: 0 0 16px 0;
-  font-family: Menlo, monospace;
-  font-size: 14px;
-}
-pre.sql .highlight {
-  font-weight: bold;
+.container {
+  max-width: 1200px;
+  margin: 16px;
 }
 
 ul,
@@ -28,6 +49,14 @@ p {
 
 ul {
   padding-left: 32px;
+}
+pre.sql {
+  margin: 0 0 16px 0;
+  font-family: Menlo, monospace;
+  font-size: 14px;
+}
+pre.sql .highlight {
+  font-weight: bold;
 }
 
 button.step {
