@@ -8,11 +8,16 @@
     "sass": "^1.23.0"
   },
   "dependencies": {
-    "@reach/router": "^1.2.1",
+    "@hot-loader/react-dom": "^16.10.2",
     "gh-pages": "^2.1.1",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
+    "react-hot-loader": "^4.12.15",
+    "react-router-dom": "^5.1.2",
     "react-transition-group": "^4.3.0"
+  },
+  "alias": {
+    "react-dom": "@hot-loader/react-dom"
   },
   "scripts": {
     "start": "parcel src/index.html",
