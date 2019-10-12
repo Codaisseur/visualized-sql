@@ -194,5 +194,51 @@ span {
   font-family: Menlo, monospace;
   font-size: 0.7rem;
 }
+.query {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.query .box {
+  border: 1px solid #555;
+  margin: 0 -8px;
+  padding: 8px;
+}
+.query .mb-1 {
+  margin-bottom: 8px;
+}
+.query .mb-2 {
+  margin-bottom: 12px;
+}
+.query .line {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+.query .clause {
+  font-family: Menlo, monospace;
+  font-size: 28px;
+  line-height: 32px;
+  font-weight: bold;
+}
+.query .var {
+  display: inline-block;
+  font-family: serif;
+  font-style: italic;
+  font-size: 16px;
+  padding: 4px 8px 5px;
+  border-radius: 6px;
+  border: 1.6px dashed #333;
+}
+.query .info {
+  font-size: 12px;
+  line-height: 14px;
+}
+.query .clause,
+.query .var {
+  margin-right: 16px;
+}
 
 /*# sourceMappingURL=/src.78399e21.css.map */

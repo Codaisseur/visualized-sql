@@ -36787,7 +36787,1978 @@ if ("development" === 'production') {
     module.exports = window.reactHotLoaderGlobal = require('./dist/react-hot-loader.development.js');
   }
 }
-},{"./dist/react-hot-loader.production.min.js":"../node_modules/react-hot-loader/dist/react-hot-loader.production.min.js","./dist/react-hot-loader.development.js":"../node_modules/react-hot-loader/dist/react-hot-loader.development.js"}],"../node_modules/@babel/runtime/helpers/esm/inheritsLoose.js":[function(require,module,exports) {
+},{"./dist/react-hot-loader.production.min.js":"../node_modules/react-hot-loader/dist/react-hot-loader.production.min.js","./dist/react-hot-loader.development.js":"../node_modules/react-hot-loader/dist/react-hot-loader.development.js"}],"../node_modules/serialize-query-params/esm/serialize.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.encodeDate = encodeDate;
+exports.decodeDate = decodeDate;
+exports.encodeDateTime = encodeDateTime;
+exports.decodeDateTime = decodeDateTime;
+exports.encodeBoolean = encodeBoolean;
+exports.decodeBoolean = decodeBoolean;
+exports.encodeNumber = encodeNumber;
+exports.decodeNumber = decodeNumber;
+exports.encodeString = encodeString;
+exports.decodeString = decodeString;
+exports.encodeJson = encodeJson;
+exports.decodeJson = decodeJson;
+exports.encodeArray = encodeArray;
+exports.decodeArray = decodeArray;
+exports.encodeNumericArray = encodeNumericArray;
+exports.decodeNumericArray = decodeNumericArray;
+exports.encodeDelimitedArray = encodeDelimitedArray;
+exports.decodeDelimitedArray = decodeDelimitedArray;
+exports.decodeDelimitedNumericArray = decodeDelimitedNumericArray;
+exports.encodeObject = encodeObject;
+exports.decodeObject = decodeObject;
+exports.decodeNumericObject = decodeNumericObject;
+exports.encodeNumericObject = exports.encodeDelimitedNumericArray = void 0;
+
+/**
+ * Encodes a date as a string in YYYY-MM-DD format.
+ *
+ * @param {Date} date
+ * @return {String} the encoded date
+ */
+function encodeDate(date) {
+  if (date == null) {
+    return undefined;
+  }
+
+  var year = date.getFullYear();
+  var month = date.getMonth() + 1;
+  var day = date.getDate();
+  return year + "-" + (month < 10 ? "0" + month : month) + "-" + (day < 10 ? "0" + day : day);
+}
+/**
+ * Converts a date in the format 'YYYY-mm-dd...' into a proper date, because
+ * new Date() does not do that correctly. The date can be as complete or incomplete
+ * as necessary (aka, '2015', '2015-10', '2015-10-01').
+ * It will not work for dates that have times included in them.
+ *
+ * If an array is provided, only the first entry is used.
+ *
+ * @param  {String} input String date form like '2015-10-01'
+ * @return {Date} parsed date
+ */
+
+
+function decodeDate(input) {
+  if (input == null || !input.length) {
+    return undefined;
+  }
+
+  var dateString = input instanceof Array ? input[0] : input;
+
+  if (dateString == null || !dateString.length) {
+    return undefined;
+  }
+
+  var parts = dateString.split('-'); // may only be a year so won't even have a month
+
+  if (parts[1] != null) {
+    parts[1] -= 1; // Note: months are 0-based
+  } else {
+    // just a year, set the month and day to the first
+    parts[1] = 0;
+    parts[2] = 1;
+  }
+
+  var decoded = new (Date.bind.apply(Date, [void 0].concat(parts)))();
+
+  if (isNaN(decoded.getTime())) {
+    return undefined;
+  }
+
+  return decoded;
+}
+/**
+ * Encodes a date as a string in ISO 8601 ("2019-05-28T10:58:40Z") format.
+ *
+ * @param {Date} date
+ * @return {String} the encoded date
+ */
+
+
+function encodeDateTime(date) {
+  if (date == null) {
+    return undefined;
+  }
+
+  return date.toISOString();
+}
+/**
+ * Converts a date in the https://en.wikipedia.org/wiki/ISO_8601 format.
+ * For allowed inputs see specs:
+ *  - https://tools.ietf.org/html/rfc2822#page-14
+ *  - http://www.ecma-international.org/ecma-262/5.1/#sec-15.9.1.15
+ *
+ * If an array is provided, only the first entry is used.
+ *
+ * @param  {String} input String date form like '1995-12-17T03:24:00'
+ * @return {Date} parsed date
+ */
+
+
+function decodeDateTime(input) {
+  if (input == null || !input.length) {
+    return undefined;
+  }
+
+  var dateString = input instanceof Array ? input[0] : input;
+
+  if (dateString == null || !dateString.length) {
+    return undefined;
+  }
+
+  var decoded = new Date(dateString);
+
+  if (isNaN(decoded.getTime())) {
+    return undefined;
+  }
+
+  return decoded;
+}
+/**
+ * Encodes a boolean as a string. true -> "1", false -> "0".
+ *
+ * @param {Boolean} bool
+ * @return {String} the encoded boolean
+ */
+
+
+function encodeBoolean(bool) {
+  if (bool === undefined) {
+    return undefined;
+  }
+
+  return bool ? '1' : '0';
+}
+/**
+ * Decodes a boolean from a string. "1" -> true, "0" -> false.
+ * Everything else maps to undefined.
+ *
+ * If an array is provided, only the first entry is used.
+ *
+ * @param {String} input the encoded boolean string
+ * @return {Boolean} the boolean value
+ */
+
+
+function decodeBoolean(input) {
+  if (input == null) {
+    return undefined;
+  }
+
+  var boolStr = input instanceof Array ? input[0] : input;
+
+  if (boolStr === '1') {
+    return true;
+  } else if (boolStr === '0') {
+    return false;
+  }
+
+  return undefined;
+}
+/**
+ * Encodes a number as a string.
+ *
+ * @param {Number} num
+ * @return {String} the encoded number
+ */
+
+
+function encodeNumber(num) {
+  if (num == null) {
+    return undefined;
+  }
+
+  return String(num);
+}
+/**
+ * Decodes a number from a string. If the number is invalid,
+ * it returns undefined.
+ *
+ * If an array is provided, only the first entry is used.
+ *
+ * @param {String} input the encoded number string
+ * @return {Number} the number value
+ */
+
+
+function decodeNumber(input) {
+  if (input == null) {
+    return undefined;
+  }
+
+  var numStr = input instanceof Array ? input[0] : input;
+
+  if (numStr == null || numStr === '') {
+    return undefined;
+  }
+
+  var result = +numStr;
+
+  if (isNaN(result)) {
+    return undefined;
+  }
+
+  return result;
+}
+/**
+ * Encodes a string while safely handling null and undefined values.
+ *
+ * @param {String} str a string to encode
+ * @return {String} the encoded string
+ */
+
+
+function encodeString(str) {
+  if (str == null) {
+    return undefined;
+  }
+
+  return String(str);
+}
+/**
+ * Decodes a string while safely handling null and undefined values.
+ *
+ * If an array is provided, only the first entry is used.
+ *
+ * @param {String} input the encoded string
+ * @return {String} the string value
+ */
+
+
+function decodeString(input) {
+  if (input == null) {
+    return undefined;
+  }
+
+  var str = input instanceof Array ? input[0] : input;
+
+  if (str == null) {
+    return undefined;
+  }
+
+  return String(str);
+}
+/**
+ * Encodes anything as a JSON string.
+ *
+ * @param {Any} any The thing to be encoded
+ * @return {String} The JSON string representation of any
+ */
+
+
+function encodeJson(any) {
+  if (any == null) {
+    return undefined;
+  }
+
+  return JSON.stringify(any);
+}
+/**
+ * Decodes a JSON string into javascript
+ *
+ * If an array is provided, only the first entry is used.
+ *
+ * @param {String} input The JSON string representation
+ * @return {Any} The javascript representation
+ */
+
+
+function decodeJson(input) {
+  if (input == null) {
+    return undefined;
+  }
+
+  var jsonStr = input instanceof Array ? input[0] : input;
+
+  if (!jsonStr) {
+    return undefined;
+  }
+
+  var result;
+
+  try {
+    result = JSON.parse(jsonStr);
+  } catch (e) {
+    /* ignore errors, returning undefined */
+  }
+
+  return result;
+}
+/**
+ * Encodes an array as a JSON string.
+ *
+ * @param {Array} array The array to be encoded
+ * @return {String[]} The array of strings to be put in the URL
+ * as repeated query parameters
+ */
+
+
+function encodeArray(array) {
+  if (!array) {
+    return undefined;
+  }
+
+  return array;
+}
+/**
+ * Decodes an array or singular value and returns it as an array
+ * or undefined if falsy. Filters out undefined values.
+ *
+ * @param {String | Array} input The input value
+ * @return {Array} The javascript representation
+ */
+
+
+function decodeArray(input) {
+  if (!input) {
+    return undefined;
+  }
+
+  if (!(input instanceof Array)) {
+    return [input];
+  }
+
+  return input.map(function (item) {
+    return item === '' ? undefined : item;
+  }).filter(function (item) {
+    return item !== undefined;
+  });
+}
+/**
+ * Encodes a numeric array as a JSON string.
+ *
+ * @param {Array} array The array to be encoded
+ * @return {String[]} The array of strings to be put in the URL
+ * as repeated query parameters
+ */
+
+
+function encodeNumericArray(array) {
+  if (!array) {
+    return undefined;
+  }
+
+  return array.map(function (d) {
+    return "" + d;
+  });
+}
+/**
+ * Decodes an array or singular value and returns it as an array
+ * or undefined if falsy. Filters out undefined and NaN values.
+ *
+ * @param {String | Array} input The input value
+ * @return {Array} The javascript representation
+ */
+
+
+function decodeNumericArray(input) {
+  var arr = decodeArray(input);
+
+  if (!arr) {
+    return undefined;
+  }
+
+  return arr.map(function (item) {
+    return +item;
+  }).filter(function (item) {
+    return item !== undefined && !isNaN(item);
+  });
+}
+/**
+ * Encodes an array as a delimited string. For example,
+ * ['a', 'b'] -> 'a_b' with entrySeparator='_'
+ *
+ * @param array The array to be encoded
+ * @param entrySeparator The string used to delimit entries
+ * @return The array as a string with elements joined by the
+ * entry separator
+ */
+
+
+function encodeDelimitedArray(array, entrySeparator) {
+  if (entrySeparator === void 0) {
+    entrySeparator = '_';
+  }
+
+  if (!array) {
+    return undefined;
+  }
+
+  return array.join(entrySeparator);
+}
+/**
+ * Decodes a delimited string into javascript array. For example,
+ * 'a_b' -> ['a', 'b'] with entrySeparator='_'
+ *
+ * If an array is provided as input, only the first entry is used.
+ *
+ * @param {String} input The JSON string representation
+ * @param entrySeparator The array as a string with elements joined by the
+ * entry separator
+ * @return {Array} The javascript representation
+ */
+
+
+function decodeDelimitedArray(input, entrySeparator) {
+  if (entrySeparator === void 0) {
+    entrySeparator = '_';
+  }
+
+  if (input == null) {
+    return undefined;
+  }
+
+  var arrayStr = input instanceof Array ? input[0] : input;
+
+  if (!arrayStr) {
+    return undefined;
+  }
+
+  return arrayStr.split(entrySeparator).map(function (item) {
+    return item === '' ? undefined : item;
+  }).filter(function (item) {
+    return item !== undefined;
+  });
+}
+/**
+ * Encodes a numeric array as a delimited string. (alias of encodeDelimitedArray)
+ * For example, [1, 2] -> '1_2' with entrySeparator='_'
+ *
+ * @param {Array} array The array to be encoded
+ * @return {String} The JSON string representation of array
+ */
+
+
+var encodeDelimitedNumericArray = encodeDelimitedArray;
+/**
+ * Decodes a delimited string into javascript array where all entries are numbers
+ * For example, '1_2' -> [1, 2] with entrySeparator='_'
+ *
+ * If an array is provided as input, only the first entry is used.
+ *
+ * @param {String} jsonStr The JSON string representation
+ * @return {Array} The javascript representation
+ */
+
+exports.encodeDelimitedNumericArray = encodeDelimitedNumericArray;
+
+function decodeDelimitedNumericArray(arrayStr, entrySeparator) {
+  if (entrySeparator === void 0) {
+    entrySeparator = '_';
+  }
+
+  var decoded = decodeDelimitedArray(arrayStr, entrySeparator);
+
+  if (!decoded) {
+    return undefined;
+  }
+
+  return decoded.map(function (d) {
+    return d == null ? undefined : +d;
+  }).filter(function (d) {
+    return d !== undefined && !isNaN(d);
+  });
+}
+/**
+ * Encode simple objects as readable strings. Works only for simple,
+ * flat objects where values are numbers, strings.
+ *
+ * For example { foo: bar, boo: baz } -> "foo-bar_boo-baz"
+ *
+ * @param {Object} object The object to encode
+ * @param {String} keyValSeparator="-" The separator between keys and values
+ * @param {String} entrySeparator="_" The separator between entries
+ * @return {String} The encoded object
+ */
+
+
+function encodeObject(obj, keyValSeparator, entrySeparator) {
+  if (keyValSeparator === void 0) {
+    keyValSeparator = '-';
+  }
+
+  if (entrySeparator === void 0) {
+    entrySeparator = '_';
+  }
+
+  if (!obj || !Object.keys(obj).length) {
+    return undefined;
+  }
+
+  return Object.keys(obj).map(function (key) {
+    return "" + key + keyValSeparator + obj[key];
+  }).join(entrySeparator);
+}
+/**
+ * Decodes a simple object to javascript. Currently works only for simple,
+ * flat objects where values are strings.
+ *
+ * For example "foo-bar_boo-baz" -> { foo: bar, boo: baz }
+ *
+ * If an array is provided as input, only the first entry is used.
+ *
+ * @param {String} input The object string to decode
+ * @param {String} keyValSeparator="-" The separator between keys and values
+ * @param {String} entrySeparator="_" The separator between entries
+ * @return {Object} The javascript object
+ */
+
+
+function decodeObject(input, keyValSeparator, entrySeparator) {
+  if (keyValSeparator === void 0) {
+    keyValSeparator = '-';
+  }
+
+  if (entrySeparator === void 0) {
+    entrySeparator = '_';
+  }
+
+  if (input == null) {
+    return undefined;
+  }
+
+  var objStr = input instanceof Array ? input[0] : input;
+
+  if (!objStr || !objStr.length) {
+    return undefined;
+  }
+
+  var obj = {};
+  objStr.split(entrySeparator).forEach(function (entryStr) {
+    var _a = entryStr.split(keyValSeparator),
+        key = _a[0],
+        value = _a[1];
+
+    obj[key] = value === '' ? undefined : value;
+  });
+  return obj;
+}
+/**
+ * Encode simple objects as readable strings. Alias of encodeObject.
+ *
+ * For example { foo: 123, boo: 521 } -> "foo-123_boo-521"
+ *
+ * @param {Object} object The object to encode
+ * @param {String} keyValSeparator="-" The separator between keys and values
+ * @param {String} entrySeparator="_" The separator between entries
+ * @return {String} The encoded object
+ */
+
+
+var encodeNumericObject = encodeObject;
+/**
+ * Decodes a simple object to javascript where all values are numbers.
+ * Currently works only for simple, flat objects.
+ *
+ * For example "foo-123_boo-521" -> { foo: 123, boo: 521 }
+ *
+ * If an array is provided as input, only the first entry is used.
+ *
+ * @param {String} input The object string to decode
+ * @param {String} keyValSeparator="-" The separator between keys and values
+ * @param {String} entrySeparator="_" The separator between entries
+ * @return {Object} The javascript object
+ */
+
+exports.encodeNumericObject = encodeNumericObject;
+
+function decodeNumericObject(input, keyValSeparator, entrySeparator) {
+  if (keyValSeparator === void 0) {
+    keyValSeparator = '-';
+  }
+
+  if (entrySeparator === void 0) {
+    entrySeparator = '_';
+  }
+
+  var decoded = decodeObject(input, keyValSeparator, entrySeparator);
+
+  if (!decoded) {
+    return undefined;
+  } // convert to numbers
+
+
+  Object.keys(decoded).forEach(function (key) {
+    if (decoded[key] !== undefined) {
+      decoded[key] = decodeNumber(decoded[key]);
+    }
+  });
+  return decoded;
+}
+},{}],"../node_modules/serialize-query-params/esm/params.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.DelimitedNumericArrayParam = exports.DelimitedArrayParam = exports.NumericObjectParam = exports.BooleanParam = exports.DateTimeParam = exports.DateParam = exports.JsonParam = exports.NumericArrayParam = exports.ArrayParam = exports.ObjectParam = exports.NumberParam = exports.StringParam = void 0;
+
+var Serialize = _interopRequireWildcard(require("./serialize"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; if (obj != null) { var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+/**
+ * String values
+ */
+var StringParam = {
+  encode: Serialize.encodeString,
+  decode: Serialize.decodeString
+};
+/**
+ * Numbers (integers or floats)
+ */
+
+exports.StringParam = StringParam;
+var NumberParam = {
+  encode: Serialize.encodeNumber,
+  decode: Serialize.decodeNumber
+};
+/**
+ * For flat objects where values are strings
+ */
+
+exports.NumberParam = NumberParam;
+var ObjectParam = {
+  encode: Serialize.encodeObject,
+  decode: Serialize.decodeObject
+};
+/**
+ * For flat arrays of strings, filters out undefined values during decode
+ */
+
+exports.ObjectParam = ObjectParam;
+var ArrayParam = {
+  encode: Serialize.encodeArray,
+  decode: Serialize.decodeArray
+};
+/**
+ * For flat arrays of strings, filters out undefined values during decode
+ */
+
+exports.ArrayParam = ArrayParam;
+var NumericArrayParam = {
+  encode: Serialize.encodeNumericArray,
+  decode: Serialize.decodeNumericArray
+};
+/**
+ * For any type of data, encoded via JSON.stringify
+ */
+
+exports.NumericArrayParam = NumericArrayParam;
+var JsonParam = {
+  encode: Serialize.encodeJson,
+  decode: Serialize.decodeJson
+};
+/**
+ * For simple dates (YYYY-MM-DD)
+ */
+
+exports.JsonParam = JsonParam;
+var DateParam = {
+  encode: Serialize.encodeDate,
+  decode: Serialize.decodeDate
+};
+/**
+ * For dates in simplified extended ISO format (YYYY-MM-DDTHH:mm:ss.sssZ or ±YYYYYY-MM-DDTHH:mm:ss.sssZ)
+ */
+
+exports.DateParam = DateParam;
+var DateTimeParam = {
+  encode: Serialize.encodeDateTime,
+  decode: Serialize.decodeDateTime
+};
+/**
+ * For boolean values: 1 = true, 0 = false
+ */
+
+exports.DateTimeParam = DateTimeParam;
+var BooleanParam = {
+  encode: Serialize.encodeBoolean,
+  decode: Serialize.decodeBoolean
+};
+/**
+ * For flat objects where the values are numbers
+ */
+
+exports.BooleanParam = BooleanParam;
+var NumericObjectParam = {
+  encode: Serialize.encodeNumericObject,
+  decode: Serialize.decodeNumericObject
+};
+/**
+ * For flat arrays of strings, filters out undefined values during decode
+ */
+
+exports.NumericObjectParam = NumericObjectParam;
+var DelimitedArrayParam = {
+  encode: Serialize.encodeDelimitedArray,
+  decode: Serialize.decodeDelimitedArray
+};
+/**
+ * For flat arrays where the values are numbers, filters out undefined values during decode
+ */
+
+exports.DelimitedArrayParam = DelimitedArrayParam;
+var DelimitedNumericArrayParam = {
+  encode: Serialize.encodeDelimitedNumericArray,
+  decode: Serialize.decodeDelimitedNumericArray
+};
+exports.DelimitedNumericArrayParam = DelimitedNumericArrayParam;
+},{"./serialize":"../node_modules/serialize-query-params/esm/serialize.js"}],"../node_modules/strict-uri-encode/index.js":[function(require,module,exports) {
+'use strict';
+
+module.exports = function (str) {
+  return encodeURIComponent(str).replace(/[!'()*]/g, function (c) {
+    return '%' + c.charCodeAt(0).toString(16).toUpperCase();
+  });
+};
+},{}],"../node_modules/decode-uri-component/index.js":[function(require,module,exports) {
+'use strict';
+
+var token = '%[a-f0-9]{2}';
+var singleMatcher = new RegExp(token, 'gi');
+var multiMatcher = new RegExp('(' + token + ')+', 'gi');
+
+function decodeComponents(components, split) {
+  try {
+    // Try to decode the entire string first
+    return decodeURIComponent(components.join(''));
+  } catch (err) {// Do nothing
+  }
+
+  if (components.length === 1) {
+    return components;
+  }
+
+  split = split || 1; // Split the array in 2 parts
+
+  var left = components.slice(0, split);
+  var right = components.slice(split);
+  return Array.prototype.concat.call([], decodeComponents(left), decodeComponents(right));
+}
+
+function decode(input) {
+  try {
+    return decodeURIComponent(input);
+  } catch (err) {
+    var tokens = input.match(singleMatcher);
+
+    for (var i = 1; i < tokens.length; i++) {
+      input = decodeComponents(tokens, i).join('');
+      tokens = input.match(singleMatcher);
+    }
+
+    return input;
+  }
+}
+
+function customDecodeURIComponent(input) {
+  // Keep track of all the replacements and prefill the map with the `BOM`
+  var replaceMap = {
+    '%FE%FF': '\uFFFD\uFFFD',
+    '%FF%FE': '\uFFFD\uFFFD'
+  };
+  var match = multiMatcher.exec(input);
+
+  while (match) {
+    try {
+      // Decode as big chunks as possible
+      replaceMap[match[0]] = decodeURIComponent(match[0]);
+    } catch (err) {
+      var result = decode(match[0]);
+
+      if (result !== match[0]) {
+        replaceMap[match[0]] = result;
+      }
+    }
+
+    match = multiMatcher.exec(input);
+  } // Add `%C2` at the end of the map to make sure it does not replace the combinator before everything else
+
+
+  replaceMap['%C2'] = '\uFFFD';
+  var entries = Object.keys(replaceMap);
+
+  for (var i = 0; i < entries.length; i++) {
+    // Replace all decoded components
+    var key = entries[i];
+    input = input.replace(new RegExp(key, 'g'), replaceMap[key]);
+  }
+
+  return input;
+}
+
+module.exports = function (encodedURI) {
+  if (typeof encodedURI !== 'string') {
+    throw new TypeError('Expected `encodedURI` to be of type `string`, got `' + typeof encodedURI + '`');
+  }
+
+  try {
+    encodedURI = encodedURI.replace(/\+/g, ' '); // Try the built in decoder first
+
+    return decodeURIComponent(encodedURI);
+  } catch (err) {
+    // Fallback to a more advanced decoder
+    return customDecodeURIComponent(encodedURI);
+  }
+};
+},{}],"../node_modules/query-string/index.js":[function(require,module,exports) {
+'use strict';
+
+var strictUriEncode = require('strict-uri-encode');
+
+var objectAssign = require('object-assign');
+
+var decodeComponent = require('decode-uri-component');
+
+function encoderForArrayFormat(opts) {
+  switch (opts.arrayFormat) {
+    case 'index':
+      return function (key, value, index) {
+        return value === null ? [encode(key, opts), '[', index, ']'].join('') : [encode(key, opts), '[', encode(index, opts), ']=', encode(value, opts)].join('');
+      };
+
+    case 'bracket':
+      return function (key, value) {
+        return value === null ? encode(key, opts) : [encode(key, opts), '[]=', encode(value, opts)].join('');
+      };
+
+    default:
+      return function (key, value) {
+        return value === null ? encode(key, opts) : [encode(key, opts), '=', encode(value, opts)].join('');
+      };
+  }
+}
+
+function parserForArrayFormat(opts) {
+  var result;
+
+  switch (opts.arrayFormat) {
+    case 'index':
+      return function (key, value, accumulator) {
+        result = /\[(\d*)\]$/.exec(key);
+        key = key.replace(/\[\d*\]$/, '');
+
+        if (!result) {
+          accumulator[key] = value;
+          return;
+        }
+
+        if (accumulator[key] === undefined) {
+          accumulator[key] = {};
+        }
+
+        accumulator[key][result[1]] = value;
+      };
+
+    case 'bracket':
+      return function (key, value, accumulator) {
+        result = /(\[\])$/.exec(key);
+        key = key.replace(/\[\]$/, '');
+
+        if (!result) {
+          accumulator[key] = value;
+          return;
+        } else if (accumulator[key] === undefined) {
+          accumulator[key] = [value];
+          return;
+        }
+
+        accumulator[key] = [].concat(accumulator[key], value);
+      };
+
+    default:
+      return function (key, value, accumulator) {
+        if (accumulator[key] === undefined) {
+          accumulator[key] = value;
+          return;
+        }
+
+        accumulator[key] = [].concat(accumulator[key], value);
+      };
+  }
+}
+
+function encode(value, opts) {
+  if (opts.encode) {
+    return opts.strict ? strictUriEncode(value) : encodeURIComponent(value);
+  }
+
+  return value;
+}
+
+function keysSorter(input) {
+  if (Array.isArray(input)) {
+    return input.sort();
+  } else if (typeof input === 'object') {
+    return keysSorter(Object.keys(input)).sort(function (a, b) {
+      return Number(a) - Number(b);
+    }).map(function (key) {
+      return input[key];
+    });
+  }
+
+  return input;
+}
+
+function extract(str) {
+  var queryStart = str.indexOf('?');
+
+  if (queryStart === -1) {
+    return '';
+  }
+
+  return str.slice(queryStart + 1);
+}
+
+function parse(str, opts) {
+  opts = objectAssign({
+    arrayFormat: 'none'
+  }, opts);
+  var formatter = parserForArrayFormat(opts); // Create an object with no prototype
+  // https://github.com/sindresorhus/query-string/issues/47
+
+  var ret = Object.create(null);
+
+  if (typeof str !== 'string') {
+    return ret;
+  }
+
+  str = str.trim().replace(/^[?#&]/, '');
+
+  if (!str) {
+    return ret;
+  }
+
+  str.split('&').forEach(function (param) {
+    var parts = param.replace(/\+/g, ' ').split('='); // Firefox (pre 40) decodes `%3D` to `=`
+    // https://github.com/sindresorhus/query-string/pull/37
+
+    var key = parts.shift();
+    var val = parts.length > 0 ? parts.join('=') : undefined; // missing `=` should be `null`:
+    // http://w3.org/TR/2012/WD-url-20120524/#collect-url-parameters
+
+    val = val === undefined ? null : decodeComponent(val);
+    formatter(decodeComponent(key), val, ret);
+  });
+  return Object.keys(ret).sort().reduce(function (result, key) {
+    var val = ret[key];
+
+    if (Boolean(val) && typeof val === 'object' && !Array.isArray(val)) {
+      // Sort object keys, not values
+      result[key] = keysSorter(val);
+    } else {
+      result[key] = val;
+    }
+
+    return result;
+  }, Object.create(null));
+}
+
+exports.extract = extract;
+exports.parse = parse;
+
+exports.stringify = function (obj, opts) {
+  var defaults = {
+    encode: true,
+    strict: true,
+    arrayFormat: 'none'
+  };
+  opts = objectAssign(defaults, opts);
+
+  if (opts.sort === false) {
+    opts.sort = function () {};
+  }
+
+  var formatter = encoderForArrayFormat(opts);
+  return obj ? Object.keys(obj).sort(opts.sort).map(function (key) {
+    var val = obj[key];
+
+    if (val === undefined) {
+      return '';
+    }
+
+    if (val === null) {
+      return encode(key, opts);
+    }
+
+    if (Array.isArray(val)) {
+      var result = [];
+      val.slice().forEach(function (val2) {
+        if (val2 === undefined) {
+          return;
+        }
+
+        result.push(formatter(key, val2, result.length));
+      });
+      return result.join('&');
+    }
+
+    return encode(key, opts) + '=' + encode(val, opts);
+  }).filter(function (x) {
+    return x.length > 0;
+  }).join('&') : '';
+};
+
+exports.parseUrl = function (str, opts) {
+  return {
+    url: str.split('?')[0] || '',
+    query: parse(extract(str), opts)
+  };
+};
+},{"strict-uri-encode":"../node_modules/strict-uri-encode/index.js","object-assign":"../node_modules/object-assign/index.js","decode-uri-component":"../node_modules/decode-uri-component/index.js"}],"../node_modules/serialize-query-params/esm/updateLocation.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.updateLocation = updateLocation;
+exports.updateInLocation = updateInLocation;
+
+var _queryString = require("query-string");
+
+var __assign = void 0 && (void 0).__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
+/**
+ * remove query params that are nully or an empty strings.
+ * note: these values are assumed to be already encoded as strings.
+ */
+function filterNully(query) {
+  var filteredQuery = Object.keys(query).reduce(function (queryAccumulator, queryParam) {
+    // get encoded value for this param
+    var encodedValue = query[queryParam]; // if it isn't null or empty string, add it to the accumulated obj
+
+    if (encodedValue != null && encodedValue !== '') {
+      queryAccumulator[queryParam] = encodedValue;
+    }
+
+    return queryAccumulator;
+  }, {});
+  return filteredQuery;
+}
+/**
+ * Update a location, wiping out parameters not included in encodedQuery
+ */
+
+
+function updateLocation(encodedQuery, location) {
+  var encodedSearchString = (0, _queryString.stringify)(filterNully(encodedQuery));
+
+  var newLocation = __assign({}, location, {
+    key: "" + Date.now(),
+    search: encodedSearchString.length ? "?" + encodedSearchString : '',
+    query: encodedQuery
+  });
+
+  return newLocation;
+}
+/**
+ * Update a location while retaining existing parameters
+ */
+
+
+function updateInLocation(encodedQueryReplacements, location) {
+  // if a query is there, use it, otherwise parse the search string
+  var currQuery = location.query || (0, _queryString.parse)(location.search);
+
+  var newQuery = __assign({}, currQuery, encodedQueryReplacements);
+
+  return updateLocation(filterNully(newQuery), location);
+}
+},{"query-string":"../node_modules/query-string/index.js"}],"../node_modules/serialize-query-params/esm/encodeQueryParams.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.encodeQueryParams = encodeQueryParams;
+exports.default = void 0;
+
+/**
+ * Convert the values in query to strings via the encode functions configured
+ * in paramConfigMap
+ *
+ * @param paramConfigMap Map from query name to { encode, decode } config
+ * @param query Query updates mapping param name to decoded value
+ */
+function encodeQueryParams(paramConfigMap, query) {
+  var encodedQuery = {};
+  var paramNames = Object.keys(query);
+
+  for (var _i = 0, paramNames_1 = paramNames; _i < paramNames_1.length; _i++) {
+    var paramName = paramNames_1[_i];
+    var decodedValue = query[paramName];
+
+    if (decodedValue == null) {
+      encodedQuery[paramName] = undefined;
+      continue;
+    }
+
+    if (!paramConfigMap[paramName]) {
+      if ("development" === 'development') {
+        console.warn("Encoding parameter " + paramName + " as string since it was not configured.");
+      } // NOTE: we could just not encode it, but it is probably convenient to have
+      // it be included by default as a string type.
+
+
+      encodedQuery[paramName] = String(decodedValue);
+    } else {
+      encodedQuery[paramName] = paramConfigMap[paramName].encode(query[paramName]);
+    }
+  }
+
+  return encodedQuery;
+}
+
+var _default = encodeQueryParams;
+exports.default = _default;
+},{}],"../node_modules/serialize-query-params/esm/decodeQueryParams.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.decodeQueryParams = decodeQueryParams;
+
+/**
+ * Convert the values in query to strings via the encode functions configured
+ * in paramConfigMap
+ *
+ * @param paramConfigMap Map from query name to { encode, decode } config
+ * @param query Query updates mapping param name to decoded value
+ */
+function decodeQueryParams(paramConfigMap, encodedQuery) {
+  var decodedQuery = {};
+  var paramNames = Object.keys(encodedQuery);
+
+  for (var _i = 0, paramNames_1 = paramNames; _i < paramNames_1.length; _i++) {
+    var paramName = paramNames_1[_i];
+    var encodedValue = encodedQuery[paramName];
+
+    if (encodedValue == null) {
+      decodedQuery[paramName] = undefined;
+      continue;
+    }
+
+    if (!paramConfigMap[paramName]) {
+      if ("development" === 'development') {
+        console.warn("Passing through parameter " + paramName + " during decoding since it was not configured.");
+      } // NOTE: we could just not include it, but it is probably convenient to have
+      // it default to be a string type.
+
+
+      decodedQuery[paramName] = encodedValue;
+    } else {
+      decodedQuery[paramName] = paramConfigMap[paramName].decode(encodedValue);
+    }
+  }
+
+  return decodedQuery;
+}
+},{}],"../node_modules/serialize-query-params/esm/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+Object.defineProperty(exports, "encodeDate", {
+  enumerable: true,
+  get: function () {
+    return _serialize.encodeDate;
+  }
+});
+Object.defineProperty(exports, "decodeDate", {
+  enumerable: true,
+  get: function () {
+    return _serialize.decodeDate;
+  }
+});
+Object.defineProperty(exports, "encodeBoolean", {
+  enumerable: true,
+  get: function () {
+    return _serialize.encodeBoolean;
+  }
+});
+Object.defineProperty(exports, "decodeBoolean", {
+  enumerable: true,
+  get: function () {
+    return _serialize.decodeBoolean;
+  }
+});
+Object.defineProperty(exports, "encodeNumber", {
+  enumerable: true,
+  get: function () {
+    return _serialize.encodeNumber;
+  }
+});
+Object.defineProperty(exports, "decodeNumber", {
+  enumerable: true,
+  get: function () {
+    return _serialize.decodeNumber;
+  }
+});
+Object.defineProperty(exports, "encodeString", {
+  enumerable: true,
+  get: function () {
+    return _serialize.encodeString;
+  }
+});
+Object.defineProperty(exports, "decodeString", {
+  enumerable: true,
+  get: function () {
+    return _serialize.decodeString;
+  }
+});
+Object.defineProperty(exports, "encodeJson", {
+  enumerable: true,
+  get: function () {
+    return _serialize.encodeJson;
+  }
+});
+Object.defineProperty(exports, "decodeJson", {
+  enumerable: true,
+  get: function () {
+    return _serialize.decodeJson;
+  }
+});
+Object.defineProperty(exports, "encodeArray", {
+  enumerable: true,
+  get: function () {
+    return _serialize.encodeArray;
+  }
+});
+Object.defineProperty(exports, "decodeArray", {
+  enumerable: true,
+  get: function () {
+    return _serialize.decodeArray;
+  }
+});
+Object.defineProperty(exports, "encodeNumericArray", {
+  enumerable: true,
+  get: function () {
+    return _serialize.encodeNumericArray;
+  }
+});
+Object.defineProperty(exports, "decodeNumericArray", {
+  enumerable: true,
+  get: function () {
+    return _serialize.decodeNumericArray;
+  }
+});
+Object.defineProperty(exports, "encodeDelimitedArray", {
+  enumerable: true,
+  get: function () {
+    return _serialize.encodeDelimitedArray;
+  }
+});
+Object.defineProperty(exports, "decodeDelimitedArray", {
+  enumerable: true,
+  get: function () {
+    return _serialize.decodeDelimitedArray;
+  }
+});
+Object.defineProperty(exports, "encodeDelimitedNumericArray", {
+  enumerable: true,
+  get: function () {
+    return _serialize.encodeDelimitedNumericArray;
+  }
+});
+Object.defineProperty(exports, "decodeDelimitedNumericArray", {
+  enumerable: true,
+  get: function () {
+    return _serialize.decodeDelimitedNumericArray;
+  }
+});
+Object.defineProperty(exports, "encodeObject", {
+  enumerable: true,
+  get: function () {
+    return _serialize.encodeObject;
+  }
+});
+Object.defineProperty(exports, "decodeObject", {
+  enumerable: true,
+  get: function () {
+    return _serialize.decodeObject;
+  }
+});
+Object.defineProperty(exports, "encodeNumericObject", {
+  enumerable: true,
+  get: function () {
+    return _serialize.encodeNumericObject;
+  }
+});
+Object.defineProperty(exports, "decodeNumericObject", {
+  enumerable: true,
+  get: function () {
+    return _serialize.decodeNumericObject;
+  }
+});
+Object.defineProperty(exports, "StringParam", {
+  enumerable: true,
+  get: function () {
+    return _params.StringParam;
+  }
+});
+Object.defineProperty(exports, "NumberParam", {
+  enumerable: true,
+  get: function () {
+    return _params.NumberParam;
+  }
+});
+Object.defineProperty(exports, "ObjectParam", {
+  enumerable: true,
+  get: function () {
+    return _params.ObjectParam;
+  }
+});
+Object.defineProperty(exports, "ArrayParam", {
+  enumerable: true,
+  get: function () {
+    return _params.ArrayParam;
+  }
+});
+Object.defineProperty(exports, "NumericArrayParam", {
+  enumerable: true,
+  get: function () {
+    return _params.NumericArrayParam;
+  }
+});
+Object.defineProperty(exports, "JsonParam", {
+  enumerable: true,
+  get: function () {
+    return _params.JsonParam;
+  }
+});
+Object.defineProperty(exports, "DateParam", {
+  enumerable: true,
+  get: function () {
+    return _params.DateParam;
+  }
+});
+Object.defineProperty(exports, "DateTimeParam", {
+  enumerable: true,
+  get: function () {
+    return _params.DateTimeParam;
+  }
+});
+Object.defineProperty(exports, "BooleanParam", {
+  enumerable: true,
+  get: function () {
+    return _params.BooleanParam;
+  }
+});
+Object.defineProperty(exports, "NumericObjectParam", {
+  enumerable: true,
+  get: function () {
+    return _params.NumericObjectParam;
+  }
+});
+Object.defineProperty(exports, "DelimitedArrayParam", {
+  enumerable: true,
+  get: function () {
+    return _params.DelimitedArrayParam;
+  }
+});
+Object.defineProperty(exports, "DelimitedNumericArrayParam", {
+  enumerable: true,
+  get: function () {
+    return _params.DelimitedNumericArrayParam;
+  }
+});
+Object.defineProperty(exports, "updateLocation", {
+  enumerable: true,
+  get: function () {
+    return _updateLocation.updateLocation;
+  }
+});
+Object.defineProperty(exports, "updateInLocation", {
+  enumerable: true,
+  get: function () {
+    return _updateLocation.updateInLocation;
+  }
+});
+Object.defineProperty(exports, "encodeQueryParams", {
+  enumerable: true,
+  get: function () {
+    return _encodeQueryParams.encodeQueryParams;
+  }
+});
+Object.defineProperty(exports, "decodeQueryParams", {
+  enumerable: true,
+  get: function () {
+    return _decodeQueryParams.decodeQueryParams;
+  }
+});
+Object.defineProperty(exports, "stringify", {
+  enumerable: true,
+  get: function () {
+    return _queryString.stringify;
+  }
+});
+Object.defineProperty(exports, "parse", {
+  enumerable: true,
+  get: function () {
+    return _queryString.parse;
+  }
+});
+Object.defineProperty(exports, "parseUrl", {
+  enumerable: true,
+  get: function () {
+    return _queryString.parseUrl;
+  }
+});
+Object.defineProperty(exports, "extract", {
+  enumerable: true,
+  get: function () {
+    return _queryString.extract;
+  }
+});
+
+var _serialize = require("./serialize");
+
+var _params = require("./params");
+
+var _updateLocation = require("./updateLocation");
+
+var _encodeQueryParams = require("./encodeQueryParams");
+
+var _decodeQueryParams = require("./decodeQueryParams");
+
+var _queryString = require("query-string");
+},{"./serialize":"../node_modules/serialize-query-params/esm/serialize.js","./params":"../node_modules/serialize-query-params/esm/params.js","./updateLocation":"../node_modules/serialize-query-params/esm/updateLocation.js","./encodeQueryParams":"../node_modules/serialize-query-params/esm/encodeQueryParams.js","./decodeQueryParams":"../node_modules/serialize-query-params/esm/decodeQueryParams.js","query-string":"../node_modules/query-string/index.js"}],"../node_modules/use-query-params/esm/QueryParamProvider.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.QueryParamProvider = QueryParamProvider;
+exports.default = exports.QueryParamContext = void 0;
+
+var React = _interopRequireWildcard(require("react"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; if (obj != null) { var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+var __assign = void 0 && (void 0).__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
+/**
+ * Adapts standard DOM window history to work with our
+ * { replace, push } interface.
+ *
+ * @param history Standard history provided by DOM
+ */
+function adaptWindowHistory(history) {
+  return {
+    replace: function (location) {
+      history.replaceState(location.state, '', location.protocol + "//" + location.host + location.pathname + location.search);
+    },
+    push: function (location) {
+      history.pushState(location.state, '', location.protocol + "//" + location.host + location.pathname + location.search);
+    }
+  };
+}
+/**
+ * Adapts @reach/router history to work with our
+ * { replace, push } interface.
+ *
+ * @param history globalHistory from @reach/router
+ */
+
+
+function adaptReachHistory(history) {
+  return {
+    replace: function (location) {
+      history.navigate(location.protocol + "//" + location.host + location.pathname + location.search, {
+        replace: true
+      });
+    },
+    push: function (location) {
+      history.navigate(location.protocol + "//" + location.host + location.pathname + location.search, {
+        replace: false
+      });
+    }
+  };
+}
+/**
+ * Helper to produce the context value falling back to
+ * window history and location if not provided.
+ */
+
+
+function getContextValue(contextValue) {
+  if (contextValue === void 0) {
+    contextValue = {};
+  }
+
+  var value = __assign({}, contextValue);
+
+  var hasWindow = typeof window !== 'undefined';
+
+  if (hasWindow) {
+    if (!value.history) {
+      value.history = adaptWindowHistory(window.history);
+    }
+
+    if (!value.location) {
+      value.location = window.location;
+    }
+  }
+
+  return value;
+}
+
+var QueryParamContext = React.createContext(getContextValue());
+/**
+ * Context provider for query params to have access to the
+ * active routing system, enabling updates to the URL.
+ */
+
+exports.QueryParamContext = QueryParamContext;
+
+function QueryParamProvider(_a) {
+  var children = _a.children,
+      ReactRouterRoute = _a.ReactRouterRoute,
+      reachHistory = _a.reachHistory,
+      history = _a.history,
+      location = _a.location; // if we have React Router, use it to get the context value
+
+  if (ReactRouterRoute) {
+    return React.createElement(ReactRouterRoute, null, function (routeProps) {
+      return React.createElement(QueryParamContext.Provider, {
+        value: getContextValue(routeProps)
+      }, children);
+    });
+  } // if we are using reach router, use its history
+
+
+  if (reachHistory) {
+    return React.createElement(QueryParamContext.Provider, {
+      value: getContextValue({
+        history: adaptReachHistory(reachHistory),
+        location: location
+      })
+    }, children);
+  } // neither reach nor react-router, so allow manual overrides
+
+
+  return React.createElement(QueryParamContext.Provider, {
+    value: getContextValue({
+      history: history,
+      location: location
+    })
+  }, children);
+}
+
+var _default = QueryParamProvider;
+exports.default = _default;
+},{"react":"../node_modules/react/index.js"}],"../node_modules/use-query-params/esm/updateUrlQuery.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.updateUrlQuery = updateUrlQuery;
+exports.default = void 0;
+
+var _serializeQueryParams = require("serialize-query-params");
+
+/**
+ * Updates the URL to match the specified query changes.
+ * If replaceIn or pushIn are used as the updateType, then parameters
+ * not specified in queryReplacements are retained. If replace or push
+ * are used, only the values in queryReplacements will be available.
+ */
+function updateUrlQuery(queryReplacements, location, history, updateType) {
+  if (updateType === void 0) {
+    updateType = 'replaceIn';
+  }
+
+  switch (updateType) {
+    case 'replaceIn':
+      history.replace((0, _serializeQueryParams.updateInLocation)(queryReplacements, location));
+      break;
+
+    case 'pushIn':
+      history.push((0, _serializeQueryParams.updateInLocation)(queryReplacements, location));
+      break;
+
+    case 'replace':
+      history.replace((0, _serializeQueryParams.updateLocation)(queryReplacements, location));
+      break;
+
+    case 'push':
+      history.push((0, _serializeQueryParams.updateLocation)(queryReplacements, location));
+      break;
+
+    default:
+  }
+}
+
+var _default = updateUrlQuery;
+exports.default = _default;
+},{"serialize-query-params":"../node_modules/serialize-query-params/esm/index.js"}],"../node_modules/use-query-params/esm/useQueryParam.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.useQueryParam = void 0;
+
+var React = _interopRequireWildcard(require("react"));
+
+var _serializeQueryParams = require("serialize-query-params");
+
+var _QueryParamProvider = require("./QueryParamProvider");
+
+var _updateUrlQuery = require("./updateUrlQuery");
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; if (obj != null) { var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+/**
+ * Given a query param name and query parameter configuration ({ encode, decode })
+ * return the decoded value and a setter for updating it.
+ *
+ * The setter takes two arguments (newValue, updateType) where updateType
+ * is one of 'replace' | 'replaceIn' | 'push' | 'pushIn', defaulting to
+ * 'replaceIn'.
+ *
+ * You may optionally pass in a rawQuery object, otherwise the query is derived
+ * from the location available in the QueryParamContext.
+ *
+ * D = decoded type
+ * D2 = return value from decode (typically same as D)
+ */
+var useQueryParam = function (name, paramConfig, rawQuery) {
+  if (paramConfig === void 0) {
+    paramConfig = _serializeQueryParams.StringParam;
+  }
+
+  var _a = React.useContext(_QueryParamProvider.QueryParamContext),
+      history = _a.history,
+      location = _a.location;
+
+  if (!rawQuery) {
+    rawQuery = React.useMemo(function () {
+      var pathname = {}; // handle checking SSR (#13)
+
+      if (typeof location === 'object') {
+        // in browser
+        if (typeof window !== 'undefined') {
+          pathname = (0, _serializeQueryParams.parse)(location.search);
+        } else {
+          // not in browser
+          pathname = (0, _serializeQueryParams.parseUrl)(location.pathname).query;
+        }
+      }
+
+      return pathname || {};
+    }, [location.search, location.pathname]);
+  } // read in the encoded string value
+
+
+  var encodedValue = rawQuery[name]; // decode if the encoded value has changed, otherwise
+  // re-use memoized value
+
+  var decodedValue = React.useMemo(function () {
+    if (encodedValue == null) {
+      return undefined;
+    }
+
+    return paramConfig.decode(encodedValue); // note that we use the stringified encoded value since the encoded
+    // value may be an array that is recreated if a different query param
+    // changes.
+  }, [encodedValue instanceof Array ? (0, _serializeQueryParams.stringify)({
+    name: encodedValue
+  }) : encodedValue]); // create the setter, memoizing via useCallback
+
+  var setValue = React.useCallback(function (newValue, updateType) {
+    var _a;
+
+    var newEncodedValue = paramConfig.encode(newValue);
+    (0, _updateUrlQuery.updateUrlQuery)((_a = {}, _a[name] = newEncodedValue, _a), location, history, updateType);
+  }, [location]);
+  return [decodedValue, setValue];
+};
+
+exports.useQueryParam = useQueryParam;
+},{"react":"../node_modules/react/index.js","serialize-query-params":"../node_modules/serialize-query-params/esm/index.js","./QueryParamProvider":"../node_modules/use-query-params/esm/QueryParamProvider.js","./updateUrlQuery":"../node_modules/use-query-params/esm/updateUrlQuery.js"}],"../node_modules/use-query-params/esm/useQueryParams.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = exports.useQueryParams = void 0;
+
+var React = _interopRequireWildcard(require("react"));
+
+var _serializeQueryParams = require("serialize-query-params");
+
+var _useQueryParam = require("./useQueryParam");
+
+var _updateUrlQuery = _interopRequireDefault(require("./updateUrlQuery"));
+
+var _QueryParamProvider = require("./QueryParamProvider");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; if (obj != null) { var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+/**
+ * Given a query parameter configuration (mapping query param name to { encode, decode }),
+ * return an object with the decoded values and a setter for updating them.
+ */
+var useQueryParams = function (paramConfigMap) {
+  var _a = React.useContext(_QueryParamProvider.QueryParamContext),
+      history = _a.history,
+      location = _a.location; // read in the raw query
+
+
+  var rawQuery = React.useMemo(function () {
+    return (0, _serializeQueryParams.parse)(location.search) || {};
+  }, [location.search]); // parse each parameter via useQueryParam
+  // we reuse the logic to not recreate objects
+
+  var paramNames = Object.keys(paramConfigMap);
+  var paramValues = paramNames.map(function (paramName) {
+    return (0, _useQueryParam.useQueryParam)(paramName, paramConfigMap[paramName], rawQuery)[0];
+  }); // we use a memo here to prevent recreating the containing decodedValues object
+  // which would break === comparisons even if no values changed.
+
+  var decodedValues = React.useMemo(function () {
+    // iterate over the decoded values and build an object
+    var decodedValues = {};
+
+    for (var i = 0; i < paramNames.length; ++i) {
+      decodedValues[paramNames[i]] = paramValues[i];
+    }
+
+    return decodedValues;
+  }, paramValues); // create a setter for updating multiple query params at once
+
+  var setQuery = React.useCallback(function (changes, updateType) {
+    // encode as strings for the URL
+    var encodedChanges = (0, _serializeQueryParams.encodeQueryParams)(paramConfigMap, changes); // update the URL
+
+    (0, _updateUrlQuery.default)(encodedChanges, location, history, updateType);
+  }, [location]); // no longer Partial
+
+  return [decodedValues, setQuery];
+};
+
+exports.useQueryParams = useQueryParams;
+var _default = useQueryParams;
+exports.default = _default;
+},{"react":"../node_modules/react/index.js","serialize-query-params":"../node_modules/serialize-query-params/esm/index.js","./useQueryParam":"../node_modules/use-query-params/esm/useQueryParam.js","./updateUrlQuery":"../node_modules/use-query-params/esm/updateUrlQuery.js","./QueryParamProvider":"../node_modules/use-query-params/esm/QueryParamProvider.js"}],"../node_modules/use-query-params/esm/withQueryParams.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.withQueryParams = withQueryParams;
+exports.default = void 0;
+
+var React = _interopRequireWildcard(require("react"));
+
+var _useQueryParams = _interopRequireDefault(require("./useQueryParams"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; if (obj != null) { var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+var __assign = void 0 && (void 0).__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
+/**
+ * HOC to provide query parameters via props `query` and `setQuery`
+ * NOTE: I couldn't get type to automatically infer generic when
+ * using the format withQueryParams(config)(component), so I switched
+ * to withQueryParams(config, component).
+ * See: https://github.com/microsoft/TypeScript/issues/30134
+ */
+function withQueryParams(paramConfigMap, WrappedComponent) {
+  // return a FC that takes props excluding query and setQuery
+  var Component = function (props) {
+    var _a = (0, _useQueryParams.default)(paramConfigMap),
+        query = _a[0],
+        setQuery = _a[1]; // see https://github.com/microsoft/TypeScript/issues/28938#issuecomment-450636046 for why `...props as P`
+
+
+    return React.createElement(WrappedComponent, __assign({
+      query: query,
+      setQuery: setQuery
+    }, props));
+  };
+
+  Component.displayName = "withQueryParams(" + (WrappedComponent.displayName || WrappedComponent.name || 'Component') + ")";
+  return Component;
+}
+
+var _default = withQueryParams;
+exports.default = _default;
+},{"react":"../node_modules/react/index.js","./useQueryParams":"../node_modules/use-query-params/esm/useQueryParams.js"}],"../node_modules/use-query-params/esm/QueryParams.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = exports.QueryParams = void 0;
+
+var _useQueryParams = _interopRequireDefault(require("./useQueryParams"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var QueryParams = function (_a) {
+  var config = _a.config,
+      children = _a.children;
+
+  var _b = (0, _useQueryParams.default)(config),
+      query = _b[0],
+      setQuery = _b[1];
+
+  return children({
+    query: query,
+    setQuery: setQuery
+  });
+};
+
+exports.QueryParams = QueryParams;
+var _default = QueryParams;
+exports.default = _default;
+},{"./useQueryParams":"../node_modules/use-query-params/esm/useQueryParams.js"}],"../node_modules/use-query-params/esm/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var _exportNames = {
+  useQueryParam: true,
+  useQueryParams: true,
+  withQueryParams: true,
+  QueryParams: true,
+  updateUrlQuery: true,
+  QueryParamProvider: true,
+  QueryParamContext: true
+};
+Object.defineProperty(exports, "useQueryParam", {
+  enumerable: true,
+  get: function () {
+    return _useQueryParam.useQueryParam;
+  }
+});
+Object.defineProperty(exports, "useQueryParams", {
+  enumerable: true,
+  get: function () {
+    return _useQueryParams.useQueryParams;
+  }
+});
+Object.defineProperty(exports, "withQueryParams", {
+  enumerable: true,
+  get: function () {
+    return _withQueryParams.withQueryParams;
+  }
+});
+Object.defineProperty(exports, "QueryParams", {
+  enumerable: true,
+  get: function () {
+    return _QueryParams.QueryParams;
+  }
+});
+Object.defineProperty(exports, "updateUrlQuery", {
+  enumerable: true,
+  get: function () {
+    return _updateUrlQuery.updateUrlQuery;
+  }
+});
+Object.defineProperty(exports, "QueryParamProvider", {
+  enumerable: true,
+  get: function () {
+    return _QueryParamProvider.QueryParamProvider;
+  }
+});
+Object.defineProperty(exports, "QueryParamContext", {
+  enumerable: true,
+  get: function () {
+    return _QueryParamProvider.QueryParamContext;
+  }
+});
+
+var _serializeQueryParams = require("serialize-query-params");
+
+Object.keys(_serializeQueryParams).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function () {
+      return _serializeQueryParams[key];
+    }
+  });
+});
+
+var _useQueryParam = require("./useQueryParam");
+
+var _useQueryParams = require("./useQueryParams");
+
+var _withQueryParams = require("./withQueryParams");
+
+var _QueryParams = require("./QueryParams");
+
+var _updateUrlQuery = require("./updateUrlQuery");
+
+var _QueryParamProvider = require("./QueryParamProvider");
+},{"serialize-query-params":"../node_modules/serialize-query-params/esm/index.js","./useQueryParam":"../node_modules/use-query-params/esm/useQueryParam.js","./useQueryParams":"../node_modules/use-query-params/esm/useQueryParams.js","./withQueryParams":"../node_modules/use-query-params/esm/withQueryParams.js","./QueryParams":"../node_modules/use-query-params/esm/QueryParams.js","./updateUrlQuery":"../node_modules/use-query-params/esm/updateUrlQuery.js","./QueryParamProvider":"../node_modules/use-query-params/esm/QueryParamProvider.js"}],"../node_modules/@babel/runtime/helpers/esm/inheritsLoose.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -41938,29 +43909,180 @@ Object.defineProperty(exports, "default", {
 var _Tutorial = _interopRequireDefault(require("./Tutorial"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"./Tutorial":"Tutorial/Tutorial.jsx"}],"SqlStepper/SqlStepper.scss":[function(require,module,exports) {
+},{"./Tutorial":"Tutorial/Tutorial.jsx"}],"../node_modules/classnames/index.js":[function(require,module,exports) {
+var define;
+/*!
+  Copyright (c) 2017 Jed Watson.
+  Licensed under the MIT License (MIT), see
+  http://jedwatson.github.io/classnames
+*/
+/* global define */
+
+(function () {
+	'use strict';
+
+	var hasOwn = {}.hasOwnProperty;
+
+	function classNames () {
+		var classes = [];
+
+		for (var i = 0; i < arguments.length; i++) {
+			var arg = arguments[i];
+			if (!arg) continue;
+
+			var argType = typeof arg;
+
+			if (argType === 'string' || argType === 'number') {
+				classes.push(arg);
+			} else if (Array.isArray(arg) && arg.length) {
+				var inner = classNames.apply(null, arg);
+				if (inner) {
+					classes.push(inner);
+				}
+			} else if (argType === 'object') {
+				for (var key in arg) {
+					if (hasOwn.call(arg, key) && arg[key]) {
+						classes.push(key);
+					}
+				}
+			}
+		}
+
+		return classes.join(' ');
+	}
+
+	if (typeof module !== 'undefined' && module.exports) {
+		classNames.default = classNames;
+		module.exports = classNames;
+	} else if (typeof define === 'function' && typeof define.amd === 'object' && define.amd) {
+		// register as 'classnames', consistent with npm package name
+		define('classnames', [], function () {
+			return classNames;
+		});
+	} else {
+		window.classNames = classNames;
+	}
+}());
+
+},{}],"CheatSheet/CheatSheet.scss":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
 module.hot.accept(reloadCSS);
-},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"SqlStepper/SqlStepper.jsx":[function(require,module,exports) {
+},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"CheatSheet/CheatSheet.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = SqlStepper;
+exports.default = CheatSheet;
 
 var _react = _interopRequireDefault(require("react"));
 
-require("./SqlStepper.scss");
+var _classnames = _interopRequireDefault(require("classnames"));
+
+require("./CheatSheet.scss");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function SqlStepper() {
-  return _react.default.createElement("div", null, "hello");
+function CheatSheet() {
+  return _react.default.createElement("div", {
+    className: "query"
+  }, _react.default.createElement("div", {
+    className: "box mb-1"
+  }, _react.default.createElement("div", {
+    className: "line mb-2"
+  }, _react.default.createElement("div", {
+    className: "clause mb-1"
+  }, "SELECT"), _react.default.createElement("div", null, _react.default.createElement("div", {
+    className: "var mb-1"
+  }, "column(s)"), _react.default.createElement("div", {
+    className: "info mb-1"
+  }, "You should leave this part to the end ^^, and until then, just keep it at *"))), _react.default.createElement("div", {
+    className: "line"
+  }, _react.default.createElement("div", {
+    className: "clause mb-1"
+  }, "FROM"), _react.default.createElement("div", null, _react.default.createElement("div", {
+    className: "var mb-1"
+  }, "table"), _react.default.createElement("div", {
+    className: "info",
+    style: {
+      maxWidth: 220
+    }
+  }, "Start here! This is the first important step, and for the while being just use SELECT *")))), _react.default.createElement("div", {
+    className: "info mb-2"
+  }, "\u25B2 The core part of every SQL query. Everything else is optional"), _react.default.createElement("div", {
+    className: "line mb-2"
+  }, _react.default.createElement("div", null, _react.default.createElement("div", {
+    className: "clause mb-1"
+  }, "LEFT"), _react.default.createElement("div", {
+    className: "info mb-1",
+    style: {
+      maxWidth: 180
+    }
+  }, "Optional! Do you want to select rows from the FROM table if none in the JOINed table match up?")), _react.default.createElement("div", {
+    className: "clause mb-1"
+  }, "JOIN"), _react.default.createElement("div", {
+    className: "var mb-1"
+  }, "table"), _react.default.createElement("div", {
+    className: "line"
+  }, _react.default.createElement("div", {
+    className: "clause mb-1"
+  }, "ON"), _react.default.createElement("div", null, _react.default.createElement("div", {
+    className: "var mb-1"
+  }, "joining equation"), _react.default.createElement("div", {
+    className: "info mb-1",
+    style: {
+      maxWidth: 400
+    }
+  }, "Used to decide whether each pair of rows, one from the FROM table, and one from the JOINed table, match up. It's totally possibly for multiple matches to happen on the same row, as is often the case with a 1:N or N:N relationship.")))), _react.default.createElement("div", {
+    className: "line mb-2"
+  }, _react.default.createElement("div", {
+    className: "clause mb-1"
+  }, "WHERE"), _react.default.createElement("div", null, _react.default.createElement("div", {
+    className: "var mb-1"
+  }, "boolean filter expression"), _react.default.createElement("div", {
+    className: "info mb-1",
+    style: {
+      maxWidth: 400
+    }
+  }, "Just like in JavaScript, you can combine multiple boolean expressions with boolean operators. Different than in JavaScript though, you use = for equality instead of == / ===, and you use AND / OR instead of && / ||"))), _react.default.createElement("div", {
+    className: "line mb-2"
+  }, _react.default.createElement("div", null, _react.default.createElement("div", {
+    className: "line"
+  }, _react.default.createElement("div", {
+    className: "clause mb-1"
+  }, "GROUP BY"), _react.default.createElement("div", {
+    className: "var mb-1"
+  }, "column(s)")), _react.default.createElement("div", {
+    className: "info mb-1",
+    style: {
+      maxWidth: 700
+    }
+  }, "You'll often get an error after adding this clause. Don't panic though! Imagine how Postgres is trying to \"condense\" each group into a single row. This is the point when you want to revise your SELECT statement. Start out with something simple, like the GROUPed column itself, and then add aggregate selections like COUNT(", _react.default.createElement("em", null, "column / *"), ")."))), _react.default.createElement("div", {
+    className: "line mb-2"
+  }, _react.default.createElement("div", {
+    className: "clause mb-1"
+  }, "ORDER BY"), _react.default.createElement("div", null, _react.default.createElement("div", {
+    className: "var mb-1"
+  }, "column(s)"), _react.default.createElement("div", {
+    className: "info mb-1",
+    style: {
+      maxWidth: 240
+    }
+  }, "You can add multiple columns here, separated by comma's. What effect does this have?"))), _react.default.createElement("div", {
+    className: "line mb-2"
+  }, _react.default.createElement("div", {
+    className: "clause mb-1"
+  }, "LIMIT"), " ", _react.default.createElement("div", {
+    className: "var mb-1"
+  }, "number"), _react.default.createElement("div", {
+    className: "clause mb-1"
+  }, "OFFSET"), " ", _react.default.createElement("div", {
+    className: "var mb-1"
+  }, "number")));
 }
-},{"react":"../node_modules/react/index.js","./SqlStepper.scss":"SqlStepper/SqlStepper.scss"}],"SqlStepper/index.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","classnames":"../node_modules/classnames/index.js","./CheatSheet.scss":"CheatSheet/CheatSheet.scss"}],"CheatSheet/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -41969,14 +44091,14 @@ Object.defineProperty(exports, "__esModule", {
 Object.defineProperty(exports, "default", {
   enumerable: true,
   get: function () {
-    return _SqlStepper.default;
+    return _CheatSheet.default;
   }
 });
 
-var _SqlStepper = _interopRequireDefault(require("./SqlStepper"));
+var _CheatSheet = _interopRequireDefault(require("./CheatSheet"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"./SqlStepper":"SqlStepper/SqlStepper.jsx"}],"App.jsx":[function(require,module,exports) {
+},{"./CheatSheet":"CheatSheet/CheatSheet.jsx"}],"App.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -41988,37 +44110,41 @@ var _react = _interopRequireDefault(require("react"));
 
 var _reactHotLoader = require("react-hot-loader");
 
-require("./styles.scss");
+var _useQueryParams = require("use-query-params");
 
 var _reactRouterDom = require("react-router-dom");
 
+require("./styles.scss");
+
 var _Tutorial = _interopRequireDefault(require("./Tutorial"));
 
-var _SqlStepper = _interopRequireDefault(require("./SqlStepper"));
+var _CheatSheet = _interopRequireDefault(require("./CheatSheet"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function App() {
-  return _react.default.createElement(_reactRouterDom.HashRouter, null, _react.default.createElement("nav", null, _react.default.createElement("ul", null, _react.default.createElement("li", null, _react.default.createElement(_reactRouterDom.NavLink, {
+  return _react.default.createElement(_reactRouterDom.HashRouter, null, _react.default.createElement(_useQueryParams.QueryParamProvider, {
+    ReactRouterRoute: _reactRouterDom.Route
+  }, _react.default.createElement("nav", null, _react.default.createElement("ul", null, _react.default.createElement("li", null, _react.default.createElement(_reactRouterDom.NavLink, {
     exact: true,
     to: "/"
-  }, "Animated tutorial (sketch)")), _react.default.createElement("li", null, _react.default.createElement(_reactRouterDom.NavLink, {
+  }, "Animated tutorial of example query")), _react.default.createElement("li", null, _react.default.createElement(_reactRouterDom.NavLink, {
     exact: true,
     to: "/stepper"
-  }, "Stepper (WIP)")))), _react.default.createElement("div", {
+  }, "Reference cheat sheet")))), _react.default.createElement("div", {
     className: "container"
   }, _react.default.createElement(_reactRouterDom.Switch, null, _react.default.createElement(_reactRouterDom.Route, {
     path: "/stepper",
-    component: _SqlStepper.default
+    component: _CheatSheet.default
   }), _react.default.createElement(_reactRouterDom.Route, {
     component: _Tutorial.default
-  }))));
+  })))));
 }
 
 var _default = (0, _reactHotLoader.hot)(module)(App);
 
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","react-hot-loader":"../node_modules/react-hot-loader/index.js","./styles.scss":"styles.scss","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","./Tutorial":"Tutorial/index.js","./SqlStepper":"SqlStepper/index.js"}],"index.jsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-hot-loader":"../node_modules/react-hot-loader/index.js","use-query-params":"../node_modules/use-query-params/esm/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","./styles.scss":"styles.scss","./Tutorial":"Tutorial/index.js","./CheatSheet":"CheatSheet/index.js"}],"index.jsx":[function(require,module,exports) {
 "use strict";
 
 var _react = _interopRequireDefault(require("react"));
@@ -42061,7 +44187,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50335" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54018" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
