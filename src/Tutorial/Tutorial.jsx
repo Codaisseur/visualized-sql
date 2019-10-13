@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import cx from "classnames";
 import "./Tutorial.scss";
 
 import { useQueryParam, NumberParam } from "use-query-params";
@@ -77,7 +78,7 @@ export default function Tutorial() {
   }, [onKeyDown]);
 
   const sqlQuery = (
-    <div>
+    <>
       <pre className="sql">
         <div>
           SELECT{" "}
@@ -116,7 +117,7 @@ export default function Tutorial() {
           used in an aggregate function
         </p>
       )}
-    </div>
+    </>
   );
 
   const stepExplainer = (
@@ -248,23 +249,25 @@ export default function Tutorial() {
         probably have to perform under the hood to achieve the result of your
         query. Use your arrow keys to step through the example.
       </p>
-      <p>
-        <strong>Step:</strong>{" "}
-        {[0, 1, 2, 3, 4, 5, 6].map(i => {
-          return (
-            <button
-              key={i}
-              className={`step ${i === step ? "active" : ""}`}
-              onClick={() => set_step(i)}
-            >
-              {i}
-            </button>
-          );
-        })}
-      </p>
-      <div className="explanation" style={{ height: 160 }}>
-        {sqlQuery}
-        {stepExplainer}
+      <div className="explanation" style={{ height: 190 }}>
+        <div className="col left">
+          <p>
+            <strong>Step:</strong>{" "}
+            {[0, 1, 2, 3, 4, 5, 6].map(i => {
+              return (
+                <button
+                  key={i}
+                  className={`step ${i === step ? "active" : ""}`}
+                  onClick={() => set_step(i)}
+                >
+                  {i}
+                </button>
+              );
+            })}
+          </p>
+          {sqlQuery}
+        </div>
+        <div className="col right">{stepExplainer}</div>
       </div>
       <CSSTransition appear in={step >= 2} timeout={200} classNames="joined">
         <CSSTransition
@@ -343,6 +346,30 @@ export default function Tutorial() {
                                     (row.right.length - 1) * 4
                             }}
                           >
+                            {!row.leftJoin && (
+                              <CSSTransition
+                                in={step === 2}
+                                appear
+                                classNames="mark"
+                              >
+                                <div
+                                  className={cx(
+                                    "mark",
+                                    "color-id-" + row.left[0]
+                                  )}
+                                  style={{ width: data.cols.left[0].width + 2 }}
+                                />
+                              </CSSTransition>
+                            )}
+                            {row.leftJoin && (
+                              <CSSTransition
+                                in={step === 3}
+                                appear
+                                classNames="mark"
+                              >
+                                <div className="mark" />
+                              </CSSTransition>
+                            )}
                             {data.cols.left.map((col, i) => {
                               // if (!b && j > 0) return null;
                               return (
@@ -384,6 +411,33 @@ export default function Tutorial() {
                               className="row"
                               key={leftRow[0] + "-" + rightRow[0]}
                             >
+                              {!row.leftJoin && (
+                                <CSSTransition
+                                  in={step === 2}
+                                  appear
+                                  classNames="mark"
+                                >
+                                  <div
+                                    className={cx(
+                                      "mark",
+                                      "color-id-" + rightRow[1]
+                                    )}
+                                    style={{
+                                      left: data.cols.right[0].width - 1,
+                                      width: data.cols.right[1].width + 2
+                                    }}
+                                  />
+                                </CSSTransition>
+                              )}
+                              {row.leftJoin && (
+                                <CSSTransition
+                                  in={step === 3}
+                                  appear
+                                  classNames="mark"
+                                >
+                                  <div className="mark" />
+                                </CSSTransition>
+                              )}
                               {data.cols.right.map((col, i) => {
                                 // if (!b && j > 0) return null;
                                 return (
@@ -403,19 +457,29 @@ export default function Tutorial() {
                       <CSSTransition
                         in={step === 4 && row.right.length > 1}
                         appear
-                        classNames="highlight"
+                        classNames="mark"
                       >
                         <div
-                          className="highlight asError"
-                          style={{ width: data.cols.right[0].width + 2 }}
+                          className="mark red"
+                          style={{
+                            width: data.cols.right[0].width + 2,
+                            top: 3
+                          }}
                         ></div>
                       </CSSTransition>
                       <CSSTransition
-                        in={step >= 5 && row.right.some(r => r[0] === null)}
+                        in={step === 5 && row.right.some(r => r[0] === null)}
                         appear
-                        classNames="highlight"
+                        classNames="mark"
                       >
-                        <div className="highlight"></div>
+                        <div className="mark red" style={{ top: 3 }}></div>
+                      </CSSTransition>
+                      <CSSTransition
+                        in={step === 6 && row.right.some(r => r[0] === null)}
+                        appear
+                        classNames="mark"
+                      >
+                        <div className="mark blue" style={{ top: 3 }}></div>
                       </CSSTransition>
                     </div>
                   </div>

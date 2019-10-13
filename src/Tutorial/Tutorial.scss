@@ -41,13 +41,13 @@ button.step {
 .explanation {
   display: flex;
 
-  > div {
+  .col {
     width: 50%;
 
-    &:first-child {
+    &.left {
       padding-right: 8px;
     }
-    &:last-child {
+    &.right {
       padding-left: 8px;
     }
   }
@@ -124,36 +124,55 @@ span {
       opacity: 1;
       left: 0;
     }
-
-    .highlight {
-      position: absolute;
-      top: 3px;
-      left: -1px;
-      bottom: -1px;
-      background: transparent;
-      border: 2px solid transparent;
-      transition: border-color 0.2s ease, background-color 0.2s ease;
-    }
-    .highlight-enter,
-    .highlight-enter-done,
-    .highlight-appear,
-    .highlight-appear-done {
-      width: 100%;
-      width: calc(100% + 2px);
-
-      background: rgba(#16b1ee, 0.4);
-      border-color: #16b1ee;
-
-      &.asError {
-        background: rgba($red, 0.4);
-        border-color: $red;
-      }
-    }
-    .highlight-exit,
-    .highlight-exit-done {
-      transition: none;
-    }
   }
+}
+
+.mark {
+  position: absolute;
+  z-index: 12;
+  top: -1px;
+  left: -1px;
+  bottom: -1px;
+  background: transparent;
+  border: 2px solid transparent;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+.mark-enter,
+.mark-enter-done,
+.mark-appear,
+.mark-appear-done {
+  width: 100%;
+  width: calc(100% + 2px);
+
+  &,
+  &.blue {
+    background: rgba(#16b1ee, 0.4);
+    border-color: #16b1ee;
+  }
+
+  &.color-id-1 {
+    background: rgba(#1b46d4, 0.4);
+    border-color: #1b46d4;
+  }
+
+  &.color-id-2 {
+    background: rgba(#16cf5d, 0.4);
+    border-color: #16cf5d;
+  }
+
+  &.color-id-4 {
+    background: rgba(#ca16ee, 0.4);
+    border-color: #ca16ee;
+  }
+
+  &.red {
+    background: rgba($red, 0.4);
+    border-color: $red;
+  }
+}
+.mark-exit,
+.mark-exit-done {
+  transition: none;
 }
 
 .excluded .right {
@@ -207,6 +226,9 @@ span {
   justify-content: flex-start;
   align-items: center;
   overflow: hidden;
+
+  position: relative;
+  z-index: 10;
 
   .data &:not(:last-child) {
     border-right: 1px solid #ddd;
