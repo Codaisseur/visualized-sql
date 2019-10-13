@@ -96,13 +96,13 @@ button.step:focus {
 .explanation {
   display: flex;
 }
-.explanation > div {
+.explanation .col {
   width: 50%;
 }
-.explanation > div:first-child {
+.explanation .col.left {
   padding-right: 8px;
 }
-.explanation > div:last-child {
+.explanation .col.right {
   padding-left: 8px;
 }
 .explanation .text {
@@ -162,33 +162,66 @@ span {
   opacity: 1;
   left: 0;
 }
-.join .right .highlight {
+
+.mark {
   position: absolute;
-  top: 3px;
+  z-index: 12;
+  top: -1px;
   left: -1px;
   bottom: -1px;
   background: transparent;
   border: 2px solid transparent;
   transition: border-color 0.2s ease, background-color 0.2s ease;
 }
-.join .right .highlight-enter,
-.join .right .highlight-enter-done,
-.join .right .highlight-appear,
-.join .right .highlight-appear-done {
+
+.mark-enter,
+.mark-enter-done,
+.mark-appear,
+.mark-appear-done {
   width: 100%;
   width: calc(100% + 2px);
+}
+.mark-enter, .mark-enter.blue,
+.mark-enter-done,
+.mark-enter-done.blue,
+.mark-appear,
+.mark-appear.blue,
+.mark-appear-done,
+.mark-appear-done.blue {
   background: rgba(22, 177, 238, 0.4);
   border-color: #16b1ee;
 }
-.join .right .highlight-enter.asError,
-.join .right .highlight-enter-done.asError,
-.join .right .highlight-appear.asError,
-.join .right .highlight-appear-done.asError {
+.mark-enter.color-id-1,
+.mark-enter-done.color-id-1,
+.mark-appear.color-id-1,
+.mark-appear-done.color-id-1 {
+  background: rgba(27, 70, 212, 0.4);
+  border-color: #1b46d4;
+}
+.mark-enter.color-id-2,
+.mark-enter-done.color-id-2,
+.mark-appear.color-id-2,
+.mark-appear-done.color-id-2 {
+  background: rgba(22, 207, 93, 0.4);
+  border-color: #16cf5d;
+}
+.mark-enter.color-id-4,
+.mark-enter-done.color-id-4,
+.mark-appear.color-id-4,
+.mark-appear-done.color-id-4 {
+  background: rgba(202, 22, 238, 0.4);
+  border-color: #ca16ee;
+}
+.mark-enter.red,
+.mark-enter-done.red,
+.mark-appear.red,
+.mark-appear-done.red {
   background: rgba(230, 45, 52, 0.4);
   border-color: #e62d34;
 }
-.join .right .highlight-exit,
-.join .right .highlight-exit-done {
+
+.mark-exit,
+.mark-exit-done {
   transition: none;
 }
 
@@ -231,6 +264,8 @@ span {
   justify-content: flex-start;
   align-items: center;
   overflow: hidden;
+  position: relative;
+  z-index: 10;
 }
 .data .cell:not(:last-child) {
   border-right: 1px solid #ddd;

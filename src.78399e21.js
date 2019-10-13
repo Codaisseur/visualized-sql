@@ -41711,7 +41711,62 @@ if ("development" !== "production") {
     style: _propTypes.default.object
   });
 }
-},{"react-router":"../node_modules/react-router/esm/react-router.js","@babel/runtime/helpers/esm/inheritsLoose":"../node_modules/@babel/runtime/helpers/esm/inheritsLoose.js","react":"../node_modules/react/index.js","history":"../node_modules/history/esm/history.js","prop-types":"../node_modules/prop-types/index.js","tiny-warning":"../node_modules/tiny-warning/dist/tiny-warning.esm.js","@babel/runtime/helpers/esm/extends":"../node_modules/@babel/runtime/helpers/esm/extends.js","@babel/runtime/helpers/esm/objectWithoutPropertiesLoose":"../node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js","tiny-invariant":"../node_modules/tiny-invariant/dist/tiny-invariant.esm.js"}],"Tutorial/Tutorial.scss":[function(require,module,exports) {
+},{"react-router":"../node_modules/react-router/esm/react-router.js","@babel/runtime/helpers/esm/inheritsLoose":"../node_modules/@babel/runtime/helpers/esm/inheritsLoose.js","react":"../node_modules/react/index.js","history":"../node_modules/history/esm/history.js","prop-types":"../node_modules/prop-types/index.js","tiny-warning":"../node_modules/tiny-warning/dist/tiny-warning.esm.js","@babel/runtime/helpers/esm/extends":"../node_modules/@babel/runtime/helpers/esm/extends.js","@babel/runtime/helpers/esm/objectWithoutPropertiesLoose":"../node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js","tiny-invariant":"../node_modules/tiny-invariant/dist/tiny-invariant.esm.js"}],"../node_modules/classnames/index.js":[function(require,module,exports) {
+var define;
+/*!
+  Copyright (c) 2017 Jed Watson.
+  Licensed under the MIT License (MIT), see
+  http://jedwatson.github.io/classnames
+*/
+/* global define */
+
+(function () {
+	'use strict';
+
+	var hasOwn = {}.hasOwnProperty;
+
+	function classNames () {
+		var classes = [];
+
+		for (var i = 0; i < arguments.length; i++) {
+			var arg = arguments[i];
+			if (!arg) continue;
+
+			var argType = typeof arg;
+
+			if (argType === 'string' || argType === 'number') {
+				classes.push(arg);
+			} else if (Array.isArray(arg) && arg.length) {
+				var inner = classNames.apply(null, arg);
+				if (inner) {
+					classes.push(inner);
+				}
+			} else if (argType === 'object') {
+				for (var key in arg) {
+					if (hasOwn.call(arg, key) && arg[key]) {
+						classes.push(key);
+					}
+				}
+			}
+		}
+
+		return classes.join(' ');
+	}
+
+	if (typeof module !== 'undefined' && module.exports) {
+		classNames.default = classNames;
+		module.exports = classNames;
+	} else if (typeof define === 'function' && typeof define.amd === 'object' && define.amd) {
+		// register as 'classnames', consistent with npm package name
+		define('classnames', [], function () {
+			return classNames;
+		});
+	} else {
+		window.classNames = classNames;
+	}
+}());
+
+},{}],"Tutorial/Tutorial.scss":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
@@ -43648,11 +43703,15 @@ exports.default = Tutorial;
 
 var _react = _interopRequireWildcard(require("react"));
 
+var _classnames = _interopRequireDefault(require("classnames"));
+
 require("./Tutorial.scss");
 
 var _useQueryParams = require("use-query-params");
 
 var _reactTransitionGroup = require("react-transition-group");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
 
@@ -43744,7 +43803,7 @@ function Tutorial() {
     };
   }, [onKeyDown]);
 
-  var sqlQuery = _react.default.createElement("div", null, _react.default.createElement("pre", {
+  var sqlQuery = _react.default.createElement(_react.default.Fragment, null, _react.default.createElement("pre", {
     className: "sql"
   }, _react.default.createElement("div", null, "SELECT", " ", step === 5 ? _react.default.createElement("span", {
     className: "highlight"
@@ -43768,7 +43827,14 @@ function Tutorial() {
 
   return _react.default.createElement("div", {
     className: "tutorial"
-  }, _react.default.createElement("h1", null, "Formulating an SQL query, step by step"), _react.default.createElement("p", null, "This visualizer tool aims to teach a methodical way for formulating SQL queries, by thinking in terms of intermediate queries and their results. It can be useful to imagine what kind of \"data flow\" steps Postgres will probably have to perform under the hood to achieve the result of your query. Use your arrow keys to step through the example."), _react.default.createElement("p", null, _react.default.createElement("strong", null, "Step:"), " ", [0, 1, 2, 3, 4, 5, 6].map(function (i) {
+  }, _react.default.createElement("h1", null, "Formulating an SQL query, step by step"), _react.default.createElement("p", null, "This visualizer tool aims to teach a methodical way for formulating SQL queries, by thinking in terms of intermediate queries and their results. It can be useful to imagine what kind of \"data flow\" steps Postgres will probably have to perform under the hood to achieve the result of your query. Use your arrow keys to step through the example."), _react.default.createElement("div", {
+    className: "explanation",
+    style: {
+      height: 190
+    }
+  }, _react.default.createElement("div", {
+    className: "col left"
+  }, _react.default.createElement("p", null, _react.default.createElement("strong", null, "Step:"), " ", [0, 1, 2, 3, 4, 5, 6].map(function (i) {
     return _react.default.createElement("button", {
       key: i,
       className: "step ".concat(i === step ? "active" : ""),
@@ -43776,12 +43842,9 @@ function Tutorial() {
         return set_step(i);
       }
     }, i);
-  })), _react.default.createElement("div", {
-    className: "explanation",
-    style: {
-      height: 160
-    }
-  }, sqlQuery, stepExplainer), _react.default.createElement(_reactTransitionGroup.CSSTransition, {
+  })), sqlQuery), _react.default.createElement("div", {
+    className: "col right"
+  }, stepExplainer)), _react.default.createElement(_reactTransitionGroup.CSSTransition, {
     appear: true,
     in: step >= 2,
     timeout: 200,
@@ -43848,7 +43911,22 @@ function Tutorial() {
         style: {
           height: step < 4 ? 32 : row.right.length * 32 + (row.right.length - 1) * 4
         }
-      }, data.cols.left.map(function (col, i) {
+      }, !row.leftJoin && _react.default.createElement(_reactTransitionGroup.CSSTransition, {
+        in: step === 2,
+        appear: true,
+        classNames: "mark"
+      }, _react.default.createElement("div", {
+        className: (0, _classnames.default)("mark", "color-id-" + row.left[0]),
+        style: {
+          width: data.cols.left[0].width + 2
+        }
+      })), row.leftJoin && _react.default.createElement(_reactTransitionGroup.CSSTransition, {
+        in: step === 3,
+        appear: true,
+        classNames: "mark"
+      }, _react.default.createElement("div", {
+        className: "mark"
+      })), data.cols.left.map(function (col, i) {
         // if (!b && j > 0) return null;
         return _react.default.createElement("div", {
           className: "cell",
@@ -43876,7 +43954,23 @@ function Tutorial() {
       return _react.default.createElement("div", {
         className: "row",
         key: leftRow[0] + "-" + rightRow[0]
-      }, data.cols.right.map(function (col, i) {
+      }, !row.leftJoin && _react.default.createElement(_reactTransitionGroup.CSSTransition, {
+        in: step === 2,
+        appear: true,
+        classNames: "mark"
+      }, _react.default.createElement("div", {
+        className: (0, _classnames.default)("mark", "color-id-" + rightRow[1]),
+        style: {
+          left: data.cols.right[0].width - 1,
+          width: data.cols.right[1].width + 2
+        }
+      })), row.leftJoin && _react.default.createElement(_reactTransitionGroup.CSSTransition, {
+        in: step === 3,
+        appear: true,
+        classNames: "mark"
+      }, _react.default.createElement("div", {
+        className: "mark"
+      })), data.cols.right.map(function (col, i) {
         // if (!b && j > 0) return null;
         return _react.default.createElement("div", {
           className: "cell",
@@ -43891,20 +43985,35 @@ function Tutorial() {
     }), _react.default.createElement(_reactTransitionGroup.CSSTransition, {
       in: step === 4 && row.right.length > 1,
       appear: true,
-      classNames: "highlight"
+      classNames: "mark"
     }, _react.default.createElement("div", {
-      className: "highlight asError",
+      className: "mark red",
       style: {
-        width: data.cols.right[0].width + 2
+        width: data.cols.right[0].width + 2,
+        top: 3
       }
     })), _react.default.createElement(_reactTransitionGroup.CSSTransition, {
-      in: step >= 5 && row.right.some(function (r) {
+      in: step === 5 && row.right.some(function (r) {
         return r[0] === null;
       }),
       appear: true,
-      classNames: "highlight"
+      classNames: "mark"
     }, _react.default.createElement("div", {
-      className: "highlight"
+      className: "mark red",
+      style: {
+        top: 3
+      }
+    })), _react.default.createElement(_reactTransitionGroup.CSSTransition, {
+      in: step === 6 && row.right.some(function (r) {
+        return r[0] === null;
+      }),
+      appear: true,
+      classNames: "mark"
+    }, _react.default.createElement("div", {
+      className: "mark blue",
+      style: {
+        top: 3
+      }
     }))));
   }))))));
 }
@@ -43915,7 +44024,7 @@ function D(_ref) {
     className: "null"
   }, "NULL") : value;
 }
-},{"react":"../node_modules/react/index.js","./Tutorial.scss":"Tutorial/Tutorial.scss","use-query-params":"../node_modules/use-query-params/esm/index.js","react-transition-group":"../node_modules/react-transition-group/esm/index.js"}],"Tutorial/index.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","classnames":"../node_modules/classnames/index.js","./Tutorial.scss":"Tutorial/Tutorial.scss","use-query-params":"../node_modules/use-query-params/esm/index.js","react-transition-group":"../node_modules/react-transition-group/esm/index.js"}],"Tutorial/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -43931,62 +44040,7 @@ Object.defineProperty(exports, "default", {
 var _Tutorial = _interopRequireDefault(require("./Tutorial"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"./Tutorial":"Tutorial/Tutorial.jsx"}],"../node_modules/classnames/index.js":[function(require,module,exports) {
-var define;
-/*!
-  Copyright (c) 2017 Jed Watson.
-  Licensed under the MIT License (MIT), see
-  http://jedwatson.github.io/classnames
-*/
-/* global define */
-
-(function () {
-	'use strict';
-
-	var hasOwn = {}.hasOwnProperty;
-
-	function classNames () {
-		var classes = [];
-
-		for (var i = 0; i < arguments.length; i++) {
-			var arg = arguments[i];
-			if (!arg) continue;
-
-			var argType = typeof arg;
-
-			if (argType === 'string' || argType === 'number') {
-				classes.push(arg);
-			} else if (Array.isArray(arg) && arg.length) {
-				var inner = classNames.apply(null, arg);
-				if (inner) {
-					classes.push(inner);
-				}
-			} else if (argType === 'object') {
-				for (var key in arg) {
-					if (hasOwn.call(arg, key) && arg[key]) {
-						classes.push(key);
-					}
-				}
-			}
-		}
-
-		return classes.join(' ');
-	}
-
-	if (typeof module !== 'undefined' && module.exports) {
-		classNames.default = classNames;
-		module.exports = classNames;
-	} else if (typeof define === 'function' && typeof define.amd === 'object' && define.amd) {
-		// register as 'classnames', consistent with npm package name
-		define('classnames', [], function () {
-			return classNames;
-		});
-	} else {
-		window.classNames = classNames;
-	}
-}());
-
-},{}],"CheatSheet/CheatSheet.scss":[function(require,module,exports) {
+},{"./Tutorial":"Tutorial/Tutorial.jsx"}],"CheatSheet/CheatSheet.scss":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
@@ -44253,7 +44307,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56234" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52040" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
