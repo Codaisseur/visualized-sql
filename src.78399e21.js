@@ -43650,6 +43650,8 @@ var _react = _interopRequireWildcard(require("react"));
 
 require("./Tutorial.scss");
 
+var _useQueryParams = require("use-query-params");
+
 var _reactTransitionGroup = require("react-transition-group");
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
@@ -43714,10 +43716,11 @@ var data = {
 };
 
 function Tutorial() {
-  var _useState = (0, _react.useState)(0),
-      _useState2 = _slicedToArray(_useState, 2),
-      step = _useState2[0],
-      set_step = _useState2[1];
+  var _useQueryParam = (0, _useQueryParams.useQueryParam)("step", _useQueryParams.NumberParam),
+      _useQueryParam2 = _slicedToArray(_useQueryParam, 2),
+      _useQueryParam2$ = _useQueryParam2[0],
+      step = _useQueryParam2$ === void 0 ? 0 : _useQueryParam2$,
+      set_step = _useQueryParam2[1];
 
   var onKeyDown = (0, _react.useCallback)(function (e) {
     if (e.which === 37
@@ -43759,9 +43762,13 @@ function Tutorial() {
     className: "error"
   }, "ERROR: column\"sayings.id\" must appear in the GROUP BY clause or be used in an aggregate function"));
 
-  var stepExplainer = _react.default.createElement("div", null, step === 0 && _react.default.createElement(_react.default.Fragment, null, _react.default.createElement("p", null, "As a first step, you always want to start with the FROM clause, choosing the most appropriate table for the question at hand, and just use the asterisk to SELECT everything from that table."), _react.default.createElement("p", null, "For example, if the question is", " ", _react.default.createElement("em", null, "\"How many sayings is teacher known for?\""), ", the question is mainly one about these teachers, not their sayings. So, we'll start with the teachers table.")), step === 1 && _react.default.createElement(_react.default.Fragment, null, _react.default.createElement("p", null, "Next, JOIN any tables that seem necessary for the question at hand. In this case, because we want to count their sayings, we're going to JOIN that table. When you JOIN, you have to specify a", " ", _react.default.createElement("em", null, "joining equation"), " with ON, which determines which rows in the first and second table belong to each other."), _react.default.createElement("p", null, "You can come up with anything you like, but usually this is an equation from a ", _react.default.createElement("em", null, "relationship"), ". In this example, it's the 1:N relationship from teachers to sayings.")), step === 2 && _react.default.createElement(_react.default.Fragment, null, _react.default.createElement("p", null, "Note how the JOIN works when either multiple rows from the joined table, or zero rows from the joined table, match up with some row from the left table:"), _react.default.createElement("ul", null, _react.default.createElement("li", null, "If multiple rows from the joined table match up with a certain row from the left table, that row is \"duplicated\" to accomodate all joined rows."), _react.default.createElement("li", null, "If zero rows from the joined table match up with a certain row from the left table, that row is left out of the result set. In this case though, we do need these rows, because otherwise we can't get an answer like", " ", _react.default.createElement("em", null, "\"Bob Ross does not have any sayings\""), "."))), step === 3 && _react.default.createElement(_react.default.Fragment, null, _react.default.createElement("p", null, "In order to keep rows from the left table with no matches in the joined table, we specify that we want a LEFT join, instead of a normal (INNER) join. Now, we get an \"empty\" row of NULLs where no row of the joined table matched.")), step === 4 && _react.default.createElement(_react.default.Fragment, null, _react.default.createElement("p", null, "In our example, we want to count the number of sayings per teacher. So, we GROUP the resulting rows according to which teacher they belong to. Unfortunately, this step doesn't produce an intermediate result just yet, and instead we get an ERROR from Postgres."), _react.default.createElement("p", null, "To understand this error, you need to imagine these groups, like in the visualization below. Postgres will try to \"condense\" each group into a single row, but in this case, Postgres doesn't know how to fit the disparate data from the joined table column \"id\" together into a single cell. Hence the error.")), step === 5 && _react.default.createElement(_react.default.Fragment, null, _react.default.createElement("p", null, "This brings us to the final step in our methodical approach to writing an SQL query: the SELECT statement. Because of the GROUP BY clause, we have to avoid selecting columns that have distinct values in the intermediate groups. But, if you GROUP BY some column, you can definitely select that column. And if it's a primary key column, you can select all of that table's columns."), _react.default.createElement("p", null, "In our case, we'll just select all columns of the teachers table, and then a simple aggregate: COUNT. There's just one small error remaining in our query (results), can you find it?")), step === 6 && _react.default.createElement(_react.default.Fragment, null, _react.default.createElement("p", null, "The aggregate COUNT(", _react.default.createElement("em", null, "columns"), ") should be read as", " ", _react.default.createElement("em", null, "\"Count all non-NULL occurrences of that set of columns\""), ". And because the asterisk stands for \"all columns\", the full row with Bob Ross plus a lot of NULLs is not entirely NULL. Therefore, that group has 1 not-entirely-NULL row."), _react.default.createElement("p", null, "If we change that to COUNT(sayings.id), Postgres will count all non-NULL occurrences of the column sayings.id. Which if course, is 0. And we've solved our problem!")));
+  var stepExplainer = _react.default.createElement("div", {
+    className: "text"
+  }, step === 0 && _react.default.createElement(_react.default.Fragment, null, _react.default.createElement("p", null, "As a first step, you always want to start with the FROM clause, choosing the most appropriate table for the question at hand, and just use the asterisk to SELECT everything from that table."), _react.default.createElement("p", null, "For example, if the question is", " ", _react.default.createElement("em", null, "\"How many sayings is teacher known for?\""), ", the question is mainly one about these teachers, not their sayings. So, we'll start with the teachers table.")), step === 1 && _react.default.createElement(_react.default.Fragment, null, _react.default.createElement("p", null, "Next, JOIN any tables that seem necessary for the question at hand. In this case, because we want to count their sayings, we're going to JOIN that table. When you JOIN, you have to specify a", " ", _react.default.createElement("em", null, "joining equation"), " with ON, which determines which rows in the first and second table belong to each other."), _react.default.createElement("p", null, "You can come up with anything you like, but usually this is an equation from a ", _react.default.createElement("em", null, "relationship"), ". In this example, it's the 1:N relationship from teachers to sayings.")), step === 2 && _react.default.createElement(_react.default.Fragment, null, _react.default.createElement("p", null, "Note how the JOIN works when either multiple rows from the joined table, or zero rows from the joined table, match up with some row from the left table:"), _react.default.createElement("ul", null, _react.default.createElement("li", null, "If multiple rows from the joined table match up with a certain row from the left table, that row is \"duplicated\" to accomodate all joined rows."), _react.default.createElement("li", null, "If zero rows from the joined table match up with a certain row from the left table, that row is left out of the result set. In this case though, we do need these rows, because otherwise we can't get an answer like", " ", _react.default.createElement("em", null, "\"Bob Ross does not have any sayings\""), "."))), step === 3 && _react.default.createElement(_react.default.Fragment, null, _react.default.createElement("p", null, "In order to keep rows from the left table with no matches in the joined table, we specify that we want a LEFT join, instead of a normal (INNER) join. Now, we get an \"empty\" row of NULLs where no row of the joined table matched.")), step === 4 && _react.default.createElement(_react.default.Fragment, null, _react.default.createElement("p", null, "In our example, we want to count the number of sayings per teacher. So, we GROUP the resulting rows according to which teacher they belong to. Unfortunately, this step doesn't produce an intermediate result just yet, and instead we get an ERROR from Postgres."), _react.default.createElement("p", null, "To understand this error, you need to imagine these groups, like in the visualization below. Postgres will try to \"condense\" each group into a single row, but in this case, Postgres doesn't know how to fit the disparate data from the joined table column \"id\" together into a single cell. Hence the error.")), step === 5 && _react.default.createElement(_react.default.Fragment, null, _react.default.createElement("p", null, "This brings us to the final step in our methodical approach to writing an SQL query: the SELECT statement. Because of the GROUP BY clause, we have to avoid selecting columns that have distinct values in the intermediate groups. But, if you GROUP BY some column, you can definitely select that column. And if it's a primary key column, you can select all of that table's columns."), _react.default.createElement("p", null, "In our case, we'll just select all columns of the teachers table, and then a simple aggregate: COUNT. There's just one small error remaining in our query (results), can you find it?")), step === 6 && _react.default.createElement(_react.default.Fragment, null, _react.default.createElement("p", null, "The aggregate COUNT(", _react.default.createElement("em", null, "columns"), ") should be read as", " ", _react.default.createElement("em", null, "\"Count all non-NULL occurrences of that set of columns\""), ". And because the asterisk stands for \"all columns\", the full row with Bob Ross plus a lot of NULLs is not entirely NULL. Therefore, that group has 1 not-entirely-NULL row."), _react.default.createElement("p", null, "If we change that to COUNT(sayings.id), Postgres will count all non-NULL occurrences of the column sayings.id. Which if course, is 0. And we've solved our problem!")));
 
-  return _react.default.createElement("div", null, _react.default.createElement("h1", null, "Formulating an SQL query, step by step"), _react.default.createElement("p", null, "This visualizer tool aims to teach a methodical way for formulating SQL queries, by thinking in terms of intermediate queries and their results. It can be useful to imagine what kind of \"data flow\" steps Postgres will probably have to perform under the hood to achieve the result of your query. Use your arrow keys to step through."), _react.default.createElement("p", null, "Step:", " ", [0, 1, 2, 3, 4, 5, 6].map(function (i) {
+  return _react.default.createElement("div", {
+    className: "tutorial"
+  }, _react.default.createElement("h1", null, "Formulating an SQL query, step by step"), _react.default.createElement("p", null, "This visualizer tool aims to teach a methodical way for formulating SQL queries, by thinking in terms of intermediate queries and their results. It can be useful to imagine what kind of \"data flow\" steps Postgres will probably have to perform under the hood to achieve the result of your query. Use your arrow keys to step through the example."), _react.default.createElement("p", null, _react.default.createElement("strong", null, "Step:"), " ", [0, 1, 2, 3, 4, 5, 6].map(function (i) {
     return _react.default.createElement("button", {
       key: i,
       className: "step ".concat(i === step ? "active" : ""),
@@ -43772,7 +43779,7 @@ function Tutorial() {
   })), _react.default.createElement("div", {
     className: "explanation",
     style: {
-      height: 200
+      height: 160
     }
   }, sqlQuery, stepExplainer), _react.default.createElement(_reactTransitionGroup.CSSTransition, {
     appear: true,
@@ -43853,9 +43860,9 @@ function Tutorial() {
           value: leftRow[i]
         }));
       }));
-    })), step >= 5 ? _react.default.createElement("div", {
+    })), _react.default.createElement("div", {
       className: "right"
-    }, _react.default.createElement("div", {
+    }, step >= 5 ? _react.default.createElement("div", {
       className: "row",
       style: {
         width: 60,
@@ -43865,9 +43872,7 @@ function Tutorial() {
       className: "cell"
     }, row.right.filter(function (r) {
       return step === 5 || r[0] !== null;
-    }).length))) : step >= 1 && _react.default.createElement("div", {
-      className: "right"
-    }, row.right.map(function (rightRow, j) {
+    }).length)) : step >= 1 && row.right.map(function (rightRow, j) {
       return _react.default.createElement("div", {
         className: "row",
         key: leftRow[0] + "-" + rightRow[0]
@@ -43883,7 +43888,24 @@ function Tutorial() {
           value: rightRow[i]
         }));
       }));
-    })));
+    }), _react.default.createElement(_reactTransitionGroup.CSSTransition, {
+      in: step === 4 && row.right.length > 1,
+      appear: true,
+      classNames: "highlight"
+    }, _react.default.createElement("div", {
+      className: "highlight asError",
+      style: {
+        width: data.cols.right[0].width + 2
+      }
+    })), _react.default.createElement(_reactTransitionGroup.CSSTransition, {
+      in: step >= 5 && row.right.some(function (r) {
+        return r[0] === null;
+      }),
+      appear: true,
+      classNames: "highlight"
+    }, _react.default.createElement("div", {
+      className: "highlight"
+    }))));
   }))))));
 }
 
@@ -43893,7 +43915,7 @@ function D(_ref) {
     className: "null"
   }, "NULL") : value;
 }
-},{"react":"../node_modules/react/index.js","./Tutorial.scss":"Tutorial/Tutorial.scss","react-transition-group":"../node_modules/react-transition-group/esm/index.js"}],"Tutorial/index.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","./Tutorial.scss":"Tutorial/Tutorial.scss","use-query-params":"../node_modules/use-query-params/esm/index.js","react-transition-group":"../node_modules/react-transition-group/esm/index.js"}],"Tutorial/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -44166,10 +44188,8 @@ function App() {
   return _react.default.createElement(_reactRouterDom.HashRouter, null, _react.default.createElement(_useQueryParams.QueryParamProvider, {
     ReactRouterRoute: _reactRouterDom.Route
   }, _react.default.createElement("nav", null, _react.default.createElement("ul", null, _react.default.createElement("li", null, _react.default.createElement(_reactRouterDom.NavLink, {
-    exact: true,
-    to: "/"
+    to: "/tutorial"
   }, "Animated tutorial of example query")), _react.default.createElement("li", null, _react.default.createElement(_reactRouterDom.NavLink, {
-    exact: true,
     to: "/cheatsheet"
   }, "Reference cheat sheet")))), _react.default.createElement("div", {
     className: "container"
@@ -44177,7 +44197,10 @@ function App() {
     path: "/cheatsheet",
     component: _CheatSheet.default
   }), _react.default.createElement(_reactRouterDom.Route, {
+    path: "/tutorial",
     component: _Tutorial.default
+  }), _react.default.createElement(_reactRouterDom.Redirect, {
+    to: "/tutorial"
   })))));
 }
 
@@ -44230,7 +44253,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55722" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56234" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

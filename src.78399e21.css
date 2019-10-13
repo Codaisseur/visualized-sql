@@ -13,6 +13,9 @@ div {
   box-sizing: border-box;
 }
 
+nav {
+  margin-right: 70px;
+}
 nav ul {
   margin: 0 16px;
   padding: 0;
@@ -38,7 +41,13 @@ nav a.active {
 
 .container {
   max-width: 1200px;
-  margin: 16px;
+  margin: 8px 16px;
+  overflow: hidden;
+}
+
+h1 {
+  margin: 0 0 8px 0;
+  line-height: 40px;
 }
 
 ul,
@@ -50,6 +59,10 @@ p {
 ul {
   padding-left: 32px;
 }
+.tutorial {
+  width: 1000px;
+}
+
 pre.sql {
   margin: 0 0 16px 0;
   font-family: Menlo, monospace;
@@ -92,9 +105,13 @@ button.step:focus {
 .explanation > div:last-child {
   padding-left: 8px;
 }
+.explanation .text {
+  font-size: 14px;
+  line-height: 16px;
+}
 
 .error {
-  color: #e00a0a;
+  color: #e62d34;
   font-weight: bold;
   font-style: italic;
 }
@@ -144,6 +161,35 @@ span {
 .joined-enter .join .right, .joined-enter-done .join .right {
   opacity: 1;
   left: 0;
+}
+.join .right .highlight {
+  position: absolute;
+  top: 3px;
+  left: -1px;
+  bottom: -1px;
+  background: transparent;
+  border: 2px solid transparent;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+.join .right .highlight-enter,
+.join .right .highlight-enter-done,
+.join .right .highlight-appear,
+.join .right .highlight-appear-done {
+  width: 100%;
+  width: calc(100% + 2px);
+  background: rgba(22, 177, 238, 0.4);
+  border-color: #16b1ee;
+}
+.join .right .highlight-enter.asError,
+.join .right .highlight-enter-done.asError,
+.join .right .highlight-appear.asError,
+.join .right .highlight-appear-done.asError {
+  background: rgba(230, 45, 52, 0.4);
+  border-color: #e62d34;
+}
+.join .right .highlight-exit,
+.join .right .highlight-exit-done {
+  transition: none;
 }
 
 .excluded .right {
