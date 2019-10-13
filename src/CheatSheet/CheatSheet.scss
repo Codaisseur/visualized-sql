@@ -6,9 +6,41 @@
   justify-content: flex-start;
   align-items: flex-start;
 
+  padding: 0 8px;
+
+  .bracket {
+    position: relative;
+    border: none !important;
+
+    margin-top: -6px;
+    padding: 8px;
+
+    &::before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 6px;
+      border: 2px solid black;
+      border-right: none;
+      content: " ";
+    }
+
+    &::after {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 6px;
+      border: 2px solid black;
+      border-left: none;
+      content: " ";
+    }
+  }
+
   .box {
-    border: 1px solid #555;
-    margin: 0 -8px;
+    border: 2px solid black;
+    margin: 0 8px 0 -8px;
     padding: 8px;
   }
 
@@ -20,8 +52,20 @@
     margin-bottom: 12px;
   }
 
+  .mr-0 {
+    margin-right: 0 !important;
+  }
+
   .line {
     display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .stack {
+    display: flex;
+    flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
     flex-wrap: wrap;
@@ -32,15 +76,12 @@
     font-size: 28px;
     line-height: 32px;
     font-weight: bold;
+
+    &.half {
+      font-size: 14px;
+      line-height: 14px;
+    }
   }
-
-  // .clause::after {
-  //   content: "\00a0";
-  // }
-
-  // .var ~ .clause::before {
-  //   content: "\00a0";
-  // }
 
   .var {
     display: inline-block;
