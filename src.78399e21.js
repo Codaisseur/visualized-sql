@@ -43989,12 +43989,16 @@ function CheatSheet() {
   return _react.default.createElement("div", {
     className: "query"
   }, _react.default.createElement("div", {
+    className: "line mb-2"
+  }, _react.default.createElement("div", {
     className: "box mb-1"
   }, _react.default.createElement("div", {
     className: "line mb-2"
   }, _react.default.createElement("div", {
     className: "clause mb-1"
-  }, "SELECT"), _react.default.createElement("div", null, _react.default.createElement("div", {
+  }, "SELECT"), _react.default.createElement("div", {
+    className: "stack"
+  }, _react.default.createElement("div", {
     className: "var mb-1"
   }, "column(s)"), _react.default.createElement("div", {
     className: "info mb-1"
@@ -44002,7 +44006,9 @@ function CheatSheet() {
     className: "line"
   }, _react.default.createElement("div", {
     className: "clause mb-1"
-  }, "FROM"), _react.default.createElement("div", null, _react.default.createElement("div", {
+  }, "FROM"), _react.default.createElement("div", {
+    className: "stack"
+  }, _react.default.createElement("div", {
     className: "var mb-1"
   }, "table"), _react.default.createElement("div", {
     className: "info",
@@ -44010,10 +44016,19 @@ function CheatSheet() {
       maxWidth: 220
     }
   }, "Start here! This is the first important step, and for the while being just use SELECT *")))), _react.default.createElement("div", {
-    className: "info mb-2"
-  }, "\u25B2 The core part of every SQL query. Everything else is optional"), _react.default.createElement("div", {
+    className: "info",
+    style: {
+      maxWidth: 120
+    }
+  }, "The core part of every SQL query. Everything else is optional")), _react.default.createElement("div", {
     className: "line mb-2"
-  }, _react.default.createElement("div", null, _react.default.createElement("div", {
+  }, _react.default.createElement("div", {
+    className: "box bracket mb-1"
+  }, _react.default.createElement("div", {
+    className: "line"
+  }, _react.default.createElement("div", {
+    className: "stack"
+  }, _react.default.createElement("div", {
     className: "clause mb-1"
   }, "LEFT"), _react.default.createElement("div", {
     className: "info mb-1",
@@ -44021,25 +44036,36 @@ function CheatSheet() {
       maxWidth: 180
     }
   }, "Optional! Do you want to select rows from the FROM table if none in the JOINed table match up?")), _react.default.createElement("div", {
-    className: "clause mb-1"
-  }, "JOIN"), _react.default.createElement("div", {
-    className: "var mb-1"
-  }, "table"), _react.default.createElement("div", {
     className: "line"
   }, _react.default.createElement("div", {
     className: "clause mb-1"
-  }, "ON"), _react.default.createElement("div", null, _react.default.createElement("div", {
+  }, "JOIN"), _react.default.createElement("div", {
+    className: "var mb-1"
+  }, "table")), _react.default.createElement("div", {
+    className: "line"
+  }, _react.default.createElement("div", {
+    className: "clause mb-1"
+  }, "ON"), _react.default.createElement("div", {
+    className: "stack"
+  }, _react.default.createElement("div", {
     className: "var mb-1"
   }, "joining equation"), _react.default.createElement("div", {
-    className: "info mb-1",
+    className: "info",
     style: {
       maxWidth: 400
     }
-  }, "Used to decide whether each pair of rows, one from the FROM table, and one from the JOINed table, match up. It's totally possibly for multiple matches to happen on the same row, as is often the case with a 1:N or N:N relationship.")))), _react.default.createElement("div", {
+  }, "Used to decide whether each pair of rows, one from the FROM table, and one from the JOINed table, match up. It's totally possibly for multiple matches to happen on the same row, as is often the case with a 1:N or N:N relationship."))))), _react.default.createElement("div", {
+    className: "info",
+    style: {
+      maxWidth: 140
+    }
+  }, "You can in fact join as many tables as you want!")), _react.default.createElement("div", {
     className: "line mb-2"
   }, _react.default.createElement("div", {
     className: "clause mb-1"
-  }, "WHERE"), _react.default.createElement("div", null, _react.default.createElement("div", {
+  }, "WHERE"), _react.default.createElement("div", {
+    className: "stack"
+  }, _react.default.createElement("div", {
     className: "var mb-1"
   }, "boolean filter expression"), _react.default.createElement("div", {
     className: "info mb-1",
@@ -44048,7 +44074,9 @@ function CheatSheet() {
     }
   }, "Just like in JavaScript, you can combine multiple boolean expressions with boolean operators. Different than in JavaScript though, you use = for equality instead of == / ===, and you use AND / OR instead of && / ||"))), _react.default.createElement("div", {
     className: "line mb-2"
-  }, _react.default.createElement("div", null, _react.default.createElement("div", {
+  }, _react.default.createElement("div", {
+    className: "stack"
+  }, _react.default.createElement("div", {
     className: "line"
   }, _react.default.createElement("div", {
     className: "clause mb-1"
@@ -44063,14 +44091,26 @@ function CheatSheet() {
     className: "line mb-2"
   }, _react.default.createElement("div", {
     className: "clause mb-1"
-  }, "ORDER BY"), _react.default.createElement("div", null, _react.default.createElement("div", {
-    className: "var mb-1"
-  }, "column(s)"), _react.default.createElement("div", {
+  }, "ORDER BY"), _react.default.createElement("div", {
+    className: "stack"
+  }, _react.default.createElement("div", {
+    className: "bracket mb-1"
+  }, _react.default.createElement("div", {
+    className: "line"
+  }, _react.default.createElement("div", {
+    className: "var"
+  }, "column"), _react.default.createElement("div", {
+    className: "stack"
+  }, _react.default.createElement("div", {
+    className: "clause half mr-0"
+  }, "ASC"), _react.default.createElement("div", {
+    className: "clause half mr-0"
+  }, "DESC")))), _react.default.createElement("div", {
     className: "info mb-1",
     style: {
       maxWidth: 240
     }
-  }, "You can add multiple columns here, separated by comma's. What effect does this have?"))), _react.default.createElement("div", {
+  }, "You can add multiple of these, separated by comma's. What effect does this have?"))), _react.default.createElement("div", {
     className: "line mb-2"
   }, _react.default.createElement("div", {
     className: "clause mb-1"
@@ -44130,11 +44170,11 @@ function App() {
     to: "/"
   }, "Animated tutorial of example query")), _react.default.createElement("li", null, _react.default.createElement(_reactRouterDom.NavLink, {
     exact: true,
-    to: "/stepper"
+    to: "/cheatsheet"
   }, "Reference cheat sheet")))), _react.default.createElement("div", {
     className: "container"
   }, _react.default.createElement(_reactRouterDom.Switch, null, _react.default.createElement(_reactRouterDom.Route, {
-    path: "/stepper",
+    path: "/cheatsheet",
     component: _CheatSheet.default
   }), _react.default.createElement(_reactRouterDom.Route, {
     component: _Tutorial.default
@@ -44158,7 +44198,10 @@ var _App = _interopRequireDefault(require("./App"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 (0, _reactDom.render)(_react.default.createElement(_App.default, null), document.getElementById("root"));
-module.hot.accept();
+
+if (module.hot) {
+  module.hot.accept();
+}
 },{"react":"../node_modules/react/index.js","react-dom":"../node_modules/@hot-loader/react-dom/index.js","./styles.scss":"styles.scss","./App":"App.jsx"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -44187,7 +44230,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54018" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55722" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

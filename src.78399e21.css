@@ -199,10 +199,37 @@ span {
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
+  padding: 0 8px;
+}
+.query .bracket {
+  position: relative;
+  border: none !important;
+  margin-top: -6px;
+  padding: 8px;
+}
+.query .bracket::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 6px;
+  border: 2px solid black;
+  border-right: none;
+  content: " ";
+}
+.query .bracket::after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 6px;
+  border: 2px solid black;
+  border-left: none;
+  content: " ";
 }
 .query .box {
-  border: 1px solid #555;
-  margin: 0 -8px;
+  border: 2px solid black;
+  margin: 0 8px 0 -8px;
   padding: 8px;
 }
 .query .mb-1 {
@@ -211,8 +238,18 @@ span {
 .query .mb-2 {
   margin-bottom: 12px;
 }
+.query .mr-0 {
+  margin-right: 0 !important;
+}
 .query .line {
   display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+.query .stack {
+  display: flex;
+  flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
   flex-wrap: wrap;
@@ -222,6 +259,10 @@ span {
   font-size: 28px;
   line-height: 32px;
   font-weight: bold;
+}
+.query .clause.half {
+  font-size: 14px;
+  line-height: 14px;
 }
 .query .var {
   display: inline-block;
