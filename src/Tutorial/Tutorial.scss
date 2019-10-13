@@ -1,5 +1,9 @@
 @import "../config";
 
+.tutorial {
+  width: 1000px;
+}
+
 pre.sql {
   margin: 0 0 16px 0;
   font-family: Menlo, monospace;
@@ -47,10 +51,15 @@ button.step {
       padding-left: 8px;
     }
   }
+
+  .text {
+    font-size: 14px;
+    line-height: 16px;
+  }
 }
 
 .error {
-  color: rgb(224, 10, 10);
+  color: $red;
   font-weight: bold;
   font-style: italic;
 }
@@ -114,6 +123,35 @@ span {
     .joined-enter-done & {
       opacity: 1;
       left: 0;
+    }
+
+    .highlight {
+      position: absolute;
+      top: 3px;
+      left: -1px;
+      bottom: -1px;
+      background: transparent;
+      border: 2px solid transparent;
+      transition: border-color 0.2s ease, background-color 0.2s ease;
+    }
+    .highlight-enter,
+    .highlight-enter-done,
+    .highlight-appear,
+    .highlight-appear-done {
+      width: 100%;
+      width: calc(100% + 2px);
+
+      background: rgba(#16b1ee, 0.4);
+      border-color: #16b1ee;
+
+      &.asError {
+        background: rgba($red, 0.4);
+        border-color: $red;
+      }
+    }
+    .highlight-exit,
+    .highlight-exit-done {
+      transition: none;
     }
   }
 }

@@ -1,7 +1,13 @@
 import React from "react";
 import { hot } from "react-hot-loader";
 import { QueryParamProvider } from "use-query-params";
-import { HashRouter as Router, Switch, Route, NavLink } from "react-router-dom";
+import {
+  HashRouter as Router,
+  Switch,
+  Route,
+  NavLink,
+  Redirect
+} from "react-router-dom";
 
 import "./styles.scss";
 
@@ -15,21 +21,20 @@ function App() {
         <nav>
           <ul>
             <li>
-              <NavLink exact to="/">
+              <NavLink to="/tutorial">
                 Animated tutorial of example query
               </NavLink>
             </li>
             <li>
-              <NavLink exact to="/cheatsheet">
-                Reference cheat sheet
-              </NavLink>
+              <NavLink to="/cheatsheet">Reference cheat sheet</NavLink>
             </li>
           </ul>
         </nav>
         <div className="container">
           <Switch>
             <Route path="/cheatsheet" component={CheatSheet} />
-            <Route component={Tutorial} />
+            <Route path="/tutorial" component={Tutorial} />
+            <Redirect to="/tutorial" />
           </Switch>
         </div>
       </QueryParamProvider>

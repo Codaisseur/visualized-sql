@@ -16,6 +16,8 @@ div {
 }
 
 nav {
+  margin-right: 70px;
+
   ul {
     margin: 0 16px;
     padding: 0;
@@ -48,7 +50,14 @@ nav {
 
 .container {
   max-width: 1200px;
-  margin: 16px;
+  margin: 8px 16px;
+
+  overflow: hidden;
+}
+
+h1 {
+  margin: 0 0 8px 0;
+  line-height: 40px;
 }
 
 ul,

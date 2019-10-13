@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "./Tutorial.scss";
 
+import { useQueryParam, NumberParam } from "use-query-params";
+
 import { CSSTransition } from "react-transition-group";
 
 const data = {
@@ -55,7 +57,7 @@ const data = {
 };
 
 export default function Tutorial() {
-  const [step, set_step] = useState(0);
+  const [step = 0, set_step] = useQueryParam("step", NumberParam);
 
   const onKeyDown = useCallback(
     e => {
@@ -118,7 +120,7 @@ export default function Tutorial() {
   );
 
   const stepExplainer = (
-    <div>
+    <div className="text">
       {step === 0 && (
         <>
           <p>
@@ -237,17 +239,17 @@ export default function Tutorial() {
   );
 
   return (
-    <div>
+    <div className="tutorial">
       <h1>Formulating an SQL query, step by step</h1>
       <p>
         This visualizer tool aims to teach a methodical way for formulating SQL
         queries, by thinking in terms of intermediate queries and their results.
         It can be useful to imagine what kind of "data flow" steps Postgres will
         probably have to perform under the hood to achieve the result of your
-        query. Use your arrow keys to step through.
+        query. Use your arrow keys to step through the example.
       </p>
       <p>
-        Step:{" "}
+        <strong>Step:</strong>{" "}
         {[0, 1, 2, 3, 4, 5, 6].map(i => {
           return (
             <button
@@ -260,7 +262,7 @@ export default function Tutorial() {
           );
         })}
       </p>
-      <div className="explanation" style={{ height: 200 }}>
+      <div className="explanation" style={{ height: 160 }}>
         {sqlQuery}
         {stepExplainer}
       </div>
@@ -357,8 +359,8 @@ export default function Tutorial() {
                         );
                       })}
                     </div>
-                    {step >= 5 ? (
-                      <div className="right">
+                    <div className="right">
+                      {step >= 5 ? (
                         <div
                           className="row"
                           style={{
@@ -374,34 +376,48 @@ export default function Tutorial() {
                             }
                           </div>
                         </div>
-                      </div>
-                    ) : (
-                      step >= 1 && (
-                        <div className="right">
-                          {row.right.map((rightRow, j) => {
-                            return (
-                              <div
-                                className="row"
-                                key={leftRow[0] + "-" + rightRow[0]}
-                              >
-                                {data.cols.right.map((col, i) => {
-                                  // if (!b && j > 0) return null;
-                                  return (
-                                    <div
-                                      className="cell"
-                                      key={i}
-                                      style={{ width: col.width, ...col.style }}
-                                    >
-                                      <D value={rightRow[i]} />
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      )
-                    )}
+                      ) : (
+                        step >= 1 &&
+                        row.right.map((rightRow, j) => {
+                          return (
+                            <div
+                              className="row"
+                              key={leftRow[0] + "-" + rightRow[0]}
+                            >
+                              {data.cols.right.map((col, i) => {
+                                // if (!b && j > 0) return null;
+                                return (
+                                  <div
+                                    className="cell"
+                                    key={i}
+                                    style={{ width: col.width, ...col.style }}
+                                  >
+                                    <D value={rightRow[i]} />
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          );
+                        })
+                      )}
+                      <CSSTransition
+                        in={step === 4 && row.right.length > 1}
+                        appear
+                        classNames="highlight"
+                      >
+                        <div
+                          className="highlight asError"
+                          style={{ width: data.cols.right[0].width + 2 }}
+                        ></div>
+                      </CSSTransition>
+                      <CSSTransition
+                        in={step >= 5 && row.right.some(r => r[0] === null)}
+                        appear
+                        classNames="highlight"
+                      >
+                        <div className="highlight"></div>
+                      </CSSTransition>
+                    </div>
                   </div>
                 );
               })}
